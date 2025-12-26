@@ -5,15 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>E-LoonSo</title>
 
+<!-- Material Icons -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <style>
 :root{
   --glass: rgba(255,255,255,0.08);
   --border: rgba(255,255,255,0.18);
-  --glow: #00ffe1;
 }
 
+/* RESET */
 *{
   margin:0;
   padding:0;
@@ -27,7 +28,7 @@ body{
   overflow-x:hidden;
 }
 
-/* ===== NAVBAR ===== */
+/* ================= NAVBAR ================= */
 .navbar{
   position:fixed;
   top:12px;
@@ -46,7 +47,8 @@ body{
   z-index:1000;
 }
 
-.nav-left,.nav-right{
+.nav-left,
+.nav-right{
   display:flex;
   align-items:center;
   gap:12px;
@@ -80,7 +82,79 @@ body{
   cursor:pointer;
 }
 
-/* ===== HERO ===== */
+/* ================= SLIDER ================= */
+.slider{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(20px);
+  transform:translateX(-100%);
+  transition:0.4s;
+  z-index:999;
+  padding:90px 20px 20px; /* navbar clearance */
+}
+
+.slider.active{
+  transform:translateX(0);
+}
+
+.slider h3{
+  margin-bottom:16px;
+  font-weight:600;
+}
+
+.slider a{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  margin-bottom:8px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.05);
+  text-decoration:none;
+  color:#fff;
+  font-size:0.95rem;
+}
+
+/* body lock when slider open */
+body.lock{
+  overflow:hidden;
+}
+
+.sections{
+  padding:40px 20px;
+}
+
+.section{
+  margin-bottom:36px;
+}
+
+.glass-card{
+  padding:20px;
+  border-radius:18px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,0.18);
+  font-size:0.95rem;
+}
+
+.glass-card.placeholder{
+  min-height:120px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  text-align:center;
+  opacity:0.85;
+}
+
+.cards{
+  display:flex;
+  gap:14px;
+  overflow-x:auto;
+  margin-top:14px;
+}
+
+/* ================= HERO ================= */
 .hero{
   height:100vh;
   position:relative;
@@ -104,7 +178,11 @@ body{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(to bottom,rgba(0,0,0,0.2),#000);
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.2),
+    #000
+  );
 }
 
 .hero-content{
@@ -124,6 +202,7 @@ body{
   font-size:0.95rem;
 }
 
+/* HERO BUTTONS */
 .hero-btn{
   display:block;
   margin:10px auto;
@@ -142,95 +221,53 @@ body{
   color:#fff;
   border:1px solid rgba(255,255,255,0.35);
 }
-
-/* ===== SECTIONS ===== */
-.sections{
-  padding:40px 20px;
-}
-
-.section{
-  margin-bottom:30px;
-}
-
-.section h2{
-  font-size:1.1rem;
-  margin-bottom:10px;
-}
-
-/* ===== GLASS CARD ===== */
-.glass-card{
-  padding:16px;
-  border-radius:16px;
-  background:var(--glass);
-  backdrop-filter:blur(16px);
-  border:1px solid var(--border);
-  font-size:0.9rem;
-  opacity:0.8;
-}
-
-/* ===== SLIDER ===== */
-.slider{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.85);
-  backdrop-filter:blur(22px);
-  transform:translateX(-100%);
-  transition:0.4s;
-  z-index:999;
-  padding:90px 20px 20px; /* 👈 NAVBAR CLEARANCE */
-}
-
-.slider.active{
-  transform:translateX(0);
-}
-
-.slider h3{
-  margin-bottom:18px;
-}
-
-.slider a{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:12px;
-  margin-bottom:8px;
-  border-radius:12px;
-  background:rgba(255,255,255,0.05);
-  text-decoration:none;
-  color:#fff;
-  font-size:0.95rem;
-}
-
-/* lock scroll */
-body.lock{
-  overflow:hidden;
-}
 </style>
 </head>
 
 <body>
 
-<!-- BACKGROUND MUSIC -->
-<audio autoplay loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_1e3c9c1d35.mp3">
-</audio>
-
-<!-- SLIDER -->
+<!-- ================= SLIDER ================= -->
 <div class="slider" id="slider">
   <h3>Universe</h3>
-  <a href="trailers.html"><span class="material-icons">movie</span>Trailers</a>
-  <a href="story.html"><span class="material-icons">menu_book</span>Game Story</a>
-  <a href="aliens.html"><span class="material-icons">public</span>Aliens</a>
-  <a href="characters.html"><span class="material-icons">person</span>Characters</a>
-  <a href="weapons.html"><span class="material-icons">security</span>Weapons</a>
-  <a href="vehicles.html"><span class="material-icons">directions_car</span>Vehicles</a>
-  <a href="skins.html"><span class="material-icons">brush</span>Skins</a>
-  <a href="community.html"><span class="material-icons">group</span>Community</a>
-  <a href="support.html"><span class="material-icons">volunteer_activism</span>Support the Mission</a>
-  <a href="about.html"><span class="material-icons">info</span>About Us</a>
+
+  <a href="index.html">
+    <span class="material-icons">home</span> Home
+  </a>
+
+  <a href="trailers.html">
+    <span class="material-icons">movie</span> Trailers
+  </a>
+
+  <a href="story.html">
+    <span class="material-icons">menu_book</span> Game Story
+  </a>
+
+  <a href="aliens.html">
+    <span class="material-icons">public</span> Aliens
+  </a>
+
+  <a href="characters.html">
+    <span class="material-icons">person</span> Characters
+  </a>
+
+  <a href="weapons.html">
+    <span class="material-icons">security</span> Weapons
+  </a>
+
+  <a href="vehicles.html">
+    <span class="material-icons">directions_car</span> Vehicles
+  </a>
+
+  <a href="community.html">
+    <span class="material-icons">group</span> Community
+  </a>
+
+  <a href="support.html">
+    <span class="material-icons">volunteer_activism</span> Support the Mission
+  </a>
 </div>
 
-<!-- NAV -->
+<!-- ================= NAVBAR ================= -->
 <div class="navbar">
   <div class="nav-left">
     <span class="material-icons menu-btn" onclick="toggleSlider()">menu</span>
@@ -239,12 +276,12 @@ body.lock{
   <div class="brand">E-LoonSo</div>
 
   <div class="nav-right">
-    <div class="credits">⚡ 120</div>
+    <div class="credits" id="credits">⚡ 120</div>
     <button class="sign-btn" onclick="go('login.html')">Sign in</button>
   </div>
 </div>
 
-<!-- HERO -->
+<!-- ================= HERO ================= -->
 <section class="hero">
   <video autoplay muted loop playsinline>
     <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4">
@@ -252,58 +289,228 @@ body.lock{
 
   <div class="hero-content">
     <h1>The Future Rises Here</h1>
-    <p>Explore the next era of immersive sci-fi ecosystems before anyone else.</p>
+    <p>Explore the next era of immersive sci-fi ecosystems.</p>
 
-    <button class="hero-btn" onclick="go('watchlist.html')">Join the Watchlist</button>
-    <button class="hero-btn alt" onclick="go('universe.html')">Explore the Universe</button>
+    <button class="hero-btn" onclick="go('watchlist.html')">
+      Join the Watchlist
+    </button>
+
+    <button class="hero-btn alt" onclick="go('universe.html')">
+      Explore the Universe
+    </button>
+
+    <button class="hero-btn alt" onclick="go('support.html')">
+      Support the Mission
+    </button>
   </div>
 </section>
-
-<!-- SECTIONS -->
+<!-- ================= SECTIONS ================= -->
 <div class="sections">
 
-  <div class="section">
+  <!-- TRAILERS -->
+  <div class="section" data-section="trailers">
     <h2>Trailers</h2>
-    <div class="glass-card">Coming soon… cinematic reveals will appear here.</div>
+
+    <div class="glass-card placeholder">
+      <strong>Coming Soon</strong><br><br>
+      Official cinematic trailers, gameplay reveals and story videos
+      will appear here.
+    </div>
+
+    <div class="cards"></div>
   </div>
 
-  <div class="section">
+  <!-- WEAPONS -->
+  <div class="section" data-section="weapons">
     <h2>Weapons</h2>
-    <div class="glass-card">Coming soon… futuristic combat arsenal.</div>
+
+    <div class="glass-card placeholder">
+      <strong>Coming Soon</strong><br><br>
+      Advanced futuristic weapons, combat tools and special gear
+      will be revealed here.
+    </div>
+
+    <div class="cards"></div>
   </div>
 
-  <div class="section">
+  <!-- ALIENS -->
+  <div class="section" data-section="aliens">
     <h2>Aliens</h2>
-    <div class="glass-card">Coming soon… unknown lifeforms.</div>
+
+    <div class="glass-card placeholder">
+      <strong>Coming Soon</strong><br><br>
+      Unknown alien species from distant planets
+      will be showcased here.
+    </div>
+
+    <div class="cards"></div>
   </div>
 
-  <div class="section">
-    <h2>Characters & Skins</h2>
-    <div class="glass-card">Coming soon… heroes of the universe.</div>
+  <!-- CHARACTERS -->
+  <div class="section" data-section="characters">
+    <h2>Characters</h2>
+
+    <div class="glass-card placeholder">
+      <strong>Coming Soon</strong><br><br>
+      Heroes, villains and key characters of the
+      E-LoonSo universe will appear here.
+    </div>
+
+    <div class="cards"></div>
   </div>
 
-  <div class="section">
+  <!-- SKINS -->
+  <div class="section" data-section="skins">
+    <h2>Skins & Customization</h2>
+
+    <div class="glass-card placeholder">
+      <strong>Coming Soon</strong><br><br>
+      Character skins, visual upgrades and
+      customization options are on the way.
+    </div>
+
+    <div class="cards"></div>
+  </div>
+
+  <!-- VEHICLES -->
+  <div class="section" data-section="vehicles">
     <h2>Vehicles</h2>
-    <div class="glass-card">Coming soon… interstellar travel tech.</div>
+
+    <div class="glass-card placeholder">
+      <strong>Coming Soon</strong><br><br>
+      Futuristic vehicles for land, air and space travel
+      will be revealed here.
+    </div>
+
+    <div class="cards"></div>
   </div>
 
-  <div class="section">
+  <!-- CONCEPTS -->
+  <div class="section" data-section="concepts">
+    <h2>Concepts & Technology</h2>
+
+    <div class="glass-card placeholder">
+      <strong>Coming Soon</strong><br><br>
+      Experimental concepts, futuristic technology and
+      behind-the-scenes ideas will be shared here.
+    </div>
+
+    <div class="cards"></div>
+  </div>
+
+  <!-- COMMUNITY -->
+  <div class="section" data-section="community">
     <h2>Community</h2>
-    <div class="glass-card">Coming soon… join the mission.</div>
+
+    <div class="glass-card placeholder">
+      <strong>Coming Soon</strong><br><br>
+      Community features, discussions and collaborations
+      will be available here.
+    </div>
+
+    <div class="cards"></div>
   </div>
 
 </div>
-
 <script>
-function toggleSlider(){
-  document.getElementById("slider").classList.toggle("active");
-  document.body.classList.toggle("lock");
-}
+/* =====================================================
+   BASIC PAGE NAVIGATION
+   ===================================================== */
 
 function go(page){
   window.location.href = page;
 }
-</script>
 
-</body>
-</html>
+/* =====================================================
+   SLIDER TOGGLE (OPEN / CLOSE)
+   ===================================================== */
+
+function toggleSlider(){
+  const slider = document.getElementById("slider");
+  const body = document.body;
+
+  if(slider.classList.contains("active")){
+    slider.classList.remove("active");
+    body.classList.remove("lock");
+  }else{
+    slider.classList.add("active");
+    body.classList.add("lock");
+  }
+}
+
+/* Close slider when any link is clicked */
+document.querySelectorAll(".slider a").forEach(link=>{
+  link.addEventListener("click", ()=>{
+    document.getElementById("slider").classList.remove("active");
+    document.body.classList.remove("lock");
+  });
+});
+
+/* =====================================================
+   E-CREDITS (STATIC NOW, DYNAMIC LATER)
+   ===================================================== */
+
+/*
+  Abhi static value hai.
+  Future me:
+  - Supabase se fetch hoga
+  - Admin panel se update hoga
+*/
+
+function setCredits(value){
+  const el = document.getElementById("credits");
+  if(el){
+    el.innerText = "⚡ " + value;
+  }
+}
+
+/* Default value */
+setCredits(120);
+
+/* =====================================================
+   SECTION CONTENT MANAGEMENT (ADMIN READY)
+   ===================================================== */
+
+/*
+  Jab admin koi trailer / file upload karega:
+  - "Coming Soon" glass card remove hoga
+  - Real cards add honge
+*/
+
+function addCardToSection(sectionName, cardHTML){
+  const section = document.querySelector(
+    `.section[data-section="${sectionName}"]`
+  );
+
+  if(!section) return;
+
+  /* Remove placeholder if exists */
+  const placeholder = section.querySelector(".placeholder");
+  if(placeholder){
+    placeholder.remove();
+  }
+
+  /* Add card to cards container */
+  const cardsContainer = section.querySelector(".cards");
+  if(cardsContainer){
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = cardHTML;
+    cardsContainer.appendChild(wrapper.firstElementChild);
+  }
+}
+
+/* =====================================================
+   EXAMPLE (FOR FUTURE ADMIN USE)
+   ===================================================== */
+
+/*
+addCardToSection("trailers", `
+  <div class="card">
+    <img src="thumbnail.jpg" alt="Trailer thumbnail">
+    <strong>First Contact</strong>
+    <p>Official cinematic reveal</p>
+  </div>
+`);
+*/
+
+</script>
