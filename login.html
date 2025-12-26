@@ -16,6 +16,7 @@
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+/* BACKGROUND */
 body{
   min-height:100vh;
   background:
@@ -27,7 +28,10 @@ body{
   color:#fff;
 }
 
+/* CARD (IMPORTANT FIX) */
 .card{
+  position:relative;
+  z-index:10;                /* 👈 FIX */
   width:90%;
   max-width:380px;
   padding:26px;
@@ -37,6 +41,7 @@ body{
   border:1px solid rgba(255,255,255,0.18);
 }
 
+/* TEXT */
 h2{
   text-align:center;
   margin-bottom:6px;
@@ -69,6 +74,7 @@ input{
   cursor:pointer;
   font-weight:600;
   font-size:0.95rem;
+  pointer-events:auto;       /* 👈 FIX */
 }
 
 .btn.primary{
@@ -105,7 +111,7 @@ input{
   background:rgba(255,255,255,0.25);
 }
 
-/* FOOT TEXT */
+/* FOOTER */
 .footer-text{
   text-align:center;
   margin-top:18px;
@@ -148,14 +154,12 @@ input{
 
 <script>
 /* ================= SUPABASE ================= */
-
 const supabase = supabase.createClient(
   "https://xuippgenqrbebcvjobmp.supabase.co",
   "sb_publishable_rhXugubfVSacKLxFeUQ6yQ__tlrkSHn"
 );
 
-/* ================= EMAIL OTP ================= */
-
+/* EMAIL OTP */
 async function sendOTP(){
   const email = document.getElementById("email").value.trim();
   if(!email) return alert("Please enter your email");
@@ -170,8 +174,7 @@ async function sendOTP(){
   }
 }
 
-/* ================= GOOGLE LOGIN ================= */
-
+/* GOOGLE LOGIN */
 async function loginWithGoogle(){
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
@@ -185,13 +188,7 @@ async function loginWithGoogle(){
   }
 }
 
-/* ================= CREATE ACCOUNT ================= */
-/*
-  Email + Google dono me:
-  - Agar user naya hai → account auto create
-  - Isliye yahan sirf UX ke liye
-*/
-
+/* CREATE ACCOUNT */
 function createAccount(){
   document.getElementById("email").focus();
 }
