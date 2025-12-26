@@ -2,475 +2,294 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>E-LoonSo</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-LoonSo</title>
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <style>
-/* ================= RESET ================= */
+:root{
+  --glass: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.18);
+  --glow: #00ffe1;
+}
+
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 body{
-  font-family:system-ui, -apple-system, BlinkMacSystemFont;
-  background:#0b0f14;
-  color:white;
+  background:#000;
+  color:#fff;
   overflow-x:hidden;
 }
 
-/* ================= NAVBAR ================= */
-.nav{
+/* ===== NAVBAR ===== */
+.navbar{
   position:fixed;
-  top:0;
-  width:100%;
-  height:64px;
-  padding:0 16px;
+  top:12px;
+  left:50%;
+  transform:translateX(-50%);
+  width:95%;
+  height:58px;
+  padding:0 14px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  background:rgba(255,255,255,0.08);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(255,255,255,0.15);
-  z-index:100;
-}
-
-.nav-left{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.logo{
-  height:28px;
-}
-
-.nav-center{
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-}
-
-.credits{
-  padding:8px 14px;
+  background:var(--glass);
+  backdrop-filter:blur(18px);
+  border:1px solid var(--border);
   border-radius:999px;
-  background:rgba(255,255,255,0.12);
-  border:1px solid rgba(255,255,255,0.25);
-  font-size:13px;
-  display:flex;
-  align-items:center;
-  gap:8px;
+  z-index:1000;
 }
 
-.credits .add{
-  background:#00eaff;
-  color:black;
-  padding:2px 8px;
-  border-radius:50%;
-  font-weight:bold;
-}
-
-.nav-right{
+.nav-left,.nav-right{
   display:flex;
   align-items:center;
   gap:12px;
 }
 
-.signin{
-  padding:8px 16px;
-  border-radius:999px;
-  background:#00eaff;
-  color:black;
-  border:none;
-  font-weight:600;
-}
-
-.dots{
-  font-size:22px;
+.menu-btn{
+  font-size:26px;
   cursor:pointer;
 }
 
-/* ================= HERO ================= */
+.brand{
+  font-weight:600;
+  letter-spacing:1px;
+}
+
+.credits{
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(0,255,225,0.15);
+  border:1px solid rgba(0,255,225,0.4);
+  font-size:12px;
+}
+
+.sign-btn{
+  padding:8px 16px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#00ffe1,#0077ff);
+  color:#000;
+  font-weight:600;
+  border:none;
+  cursor:pointer;
+}
+
+/* ===== HERO ===== */
 .hero{
-  height:70vh;
-  margin-top:64px;
+  height:100vh;
   position:relative;
-  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:20px;
 }
 
 .hero video{
+  position:absolute;
+  inset:0;
   width:100%;
   height:100%;
   object-fit:cover;
+  opacity:0.35;
 }
 
-.hero-overlay{
+.hero::after{
+  content:"";
   position:absolute;
   inset:0;
-  background:rgba(0,0,0,0.6);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
-  text-align:center;
+  background:linear-gradient(to bottom,rgba(0,0,0,0.2),#000);
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:520px;
 }
 
 .hero h1{
-  max-width:900px;
-  font-size:26px;
-  line-height:1.4;
-}
-
-.hero-buttons{
-  margin-top:24px;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
-
-.cta{
-  padding:16px 34px;
-  border-radius:999px;
-  background:#00eaff;
-  color:black;
-  border:none;
-  font-weight:600;
-  box-shadow:0 0 30px rgba(0,234,255,0.6);
-}
-
-.ghost-group{
-  display:flex;
-  gap:14px;
-}
-
-.ghost{
-  padding:12px 22px;
-  border-radius:999px;
-  background:rgba(255,255,255,0.1);
-  border:1px solid rgba(255,255,255,0.3);
-  color:white;
-} 
-
-.footer{
-  padding:60px 20px;
-  text-align:center;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:18px;
-  color:#b5b5b5;
-  font-size:14px;
-}
-
-.footer p{
-  max-width:900px;
-  line-height:1.7;
-  margin:0;
-}
-
-.footer .copyright{
-  font-size:13px;
-  opacity:0.7;
-}
-
-/* ================= SECTION SYSTEM (IMPORTANT) ================= */
-
-/* section container */
-.section{
-  padding:26px 16px;
-}
-
-/* section title */
-.section h2{
-  font-size:22px;
+  font-size:2rem;
   margin-bottom:12px;
 }
 
-/* horizontal scroll */
-.scroll{
-  display:flex;
-  gap:14px;
-  overflow-x:auto;
-  padding-bottom:8px;
+.hero p{
+  opacity:0.85;
+  margin-bottom:22px;
+  font-size:0.95rem;
 }
 
-.scroll::-webkit-scrollbar{
-  height:6px;
-}
-.scroll::-webkit-scrollbar-thumb{
-  background:#333;
-  border-radius:10px;
-}
-
-/* card base (THIS IS WHY CARDS WILL SHOW) */
-.card{
-  min-width:220px;
-  height:150px;
-  border-radius:16px;
-  background:linear-gradient(135deg,#1b1f2a,#0c0f16);
-  position:relative;
-  flex-shrink:0;
-  display:flex;
-  align-items:flex-end;
+.hero-btn{
+  display:block;
+  margin:10px auto;
+  width:220px;
+  padding:14px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#00ffe1,#0077ff);
+  color:#000;
+  font-weight:600;
+  border:none;
   cursor:pointer;
 }
 
-/* card content */
-.card-content{
-  padding:12px;
+.hero-btn.alt{
+  background:transparent;
+  color:#fff;
+  border:1px solid rgba(255,255,255,0.35);
 }
 
-.card-title{
-  font-size:14px;
-  font-weight:600;
+/* ===== SECTIONS ===== */
+.sections{
+  padding:40px 20px;
 }
 
-.card-desc{
-  font-size:12px;
-  opacity:0.7;
+.section{
+  margin-bottom:30px;
 }
 
-/* coming soon */
-.coming{
-  position:absolute;
-  top:12px;
-  left:12px;
-  font-size:11px;
-  opacity:0.6;
+.section h2{
+  font-size:1.1rem;
+  margin-bottom:10px;
 }
 
-/* locked card */
-.locked{
-  filter:grayscale(1);
+/* ===== GLASS CARD ===== */
+.glass-card{
+  padding:16px;
+  border-radius:16px;
+  background:var(--glass);
+  backdrop-filter:blur(16px);
+  border:1px solid var(--border);
+  font-size:0.9rem;
+  opacity:0.8;
 }
 
-.lock-badge{
-  position:absolute;
-  top:10px;
-  right:10px;
-  padding:4px 10px;
-  border-radius:999px;
-  font-size:11px;
-  background:rgba(255,0,0,0.15);
-  border:1px solid rgba(255,0,0,0.5);
-}
-
-/* ================= SLIDER ================= */
+/* ===== SLIDER ===== */
 .slider{
   position:fixed;
-  right:-320px;
-  top:0;
-  width:320px;
-  height:100vh;
-  background:linear-gradient(180deg,#0b0f14,#06080d);
-  backdrop-filter:blur(20px);
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(22px);
+  transform:translateX(-100%);
   transition:0.4s;
-  z-index:200;
-  padding-top:80px;
+  z-index:999;
+  padding:90px 20px 20px; /* 👈 NAVBAR CLEARANCE */
 }
 
 .slider.active{
-  right:0;
+  transform:translateX(0);
+}
+
+.slider h3{
+  margin-bottom:18px;
 }
 
 .slider a{
-  display:block;
-  padding:14px 26px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  margin-bottom:8px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.05);
   text-decoration:none;
-  color:white;
+  color:#fff;
+  font-size:0.95rem;
 }
 
-.slider a:hover{
-  background:rgba(0,234,255,0.15);
+/* lock scroll */
+body.lock{
+  overflow:hidden;
 }
 </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<div class="nav">
+<!-- BACKGROUND MUSIC -->
+<audio autoplay loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_1e3c9c1d35.mp3">
+</audio>
+
+<!-- SLIDER -->
+<div class="slider" id="slider">
+  <h3>Universe</h3>
+  <a href="trailers.html"><span class="material-icons">movie</span>Trailers</a>
+  <a href="story.html"><span class="material-icons">menu_book</span>Game Story</a>
+  <a href="aliens.html"><span class="material-icons">public</span>Aliens</a>
+  <a href="characters.html"><span class="material-icons">person</span>Characters</a>
+  <a href="weapons.html"><span class="material-icons">security</span>Weapons</a>
+  <a href="vehicles.html"><span class="material-icons">directions_car</span>Vehicles</a>
+  <a href="skins.html"><span class="material-icons">brush</span>Skins</a>
+  <a href="community.html"><span class="material-icons">group</span>Community</a>
+  <a href="support.html"><span class="material-icons">volunteer_activism</span>Support the Mission</a>
+  <a href="about.html"><span class="material-icons">info</span>About Us</a>
+</div>
+
+<!-- NAV -->
+<div class="navbar">
   <div class="nav-left">
-    <img src="assets/logo.png" class="logo">
+    <span class="material-icons menu-btn" onclick="toggleSlider()">menu</span>
   </div>
 
-  <div class="nav-center">
-    <div class="credits">
-      ⚡ E-Credits: <b>120</b> <span class="add">+</span>
-    </div>
-  </div>
+  <div class="brand">E-LoonSo</div>
 
   <div class="nav-right">
-    <button class="signin" onclick="location.href='login.html'">Sign in</button>
-    <span class="dots" onclick="toggleSlider()">⋮</span>
+    <div class="credits">⚡ 120</div>
+    <button class="sign-btn" onclick="go('login.html')">Sign in</button>
   </div>
 </div>
 
 <!-- HERO -->
-<div class="hero">
+<section class="hero">
   <video autoplay muted loop playsinline>
-    <source src="https://cdn.coverr.co/videos/coverr-futuristic-gaming-technology-9680/1080p.mp4" type="video/mp4">
+    <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4">
   </video>
 
-  <div class="hero-overlay">
-    <h1>
-      E-LoonSo is building the next era of immersive Sci-Fi ecosystems.
-      Explore the universe before anyone else.
-    </h1>
+  <div class="hero-content">
+    <h1>The Future Rises Here</h1>
+    <p>Explore the next era of immersive sci-fi ecosystems before anyone else.</p>
 
-    <div class="hero-buttons">
-      <button class="cta" onclick="location.href='waitlist.html'">
-        Join the Watchlist
-      </button>
-
-      <div class="ghost-group">
-        <button class="ghost" onclick="location.href='login.html'">
-          Explore the Universe
-        </button>
-        <button class="ghost" onclick="location.href='support.html'">
-          Support the Mission
-        </button>
-      </div>
-    </div>
+    <button class="hero-btn" onclick="go('watchlist.html')">Join the Watchlist</button>
+    <button class="hero-btn alt" onclick="go('universe.html')">Explore the Universe</button>
   </div>
-</div>
+</section>
 
-<!-- ================== YOUR SECTIONS HERE ================== -->
-<!-- PASTE YOUR SECTION CODE BELOW THIS LINE -->
-<section class="section">
-<h2>Trailers</h2>
-<div class="scroll">
+<!-- SECTIONS -->
+<div class="sections">
 
-<div class="card" onclick="openFree('trailer-player.html')">
-  <div class="coming">COMING SOON</div>
-  <div class="card-content">
-    <div class="card-title">First Contact</div>
-    <div class="card-desc">Official cinematic reveal</div>
+  <div class="section">
+    <h2>Trailers</h2>
+    <div class="glass-card">Coming soon… cinematic reveals will appear here.</div>
   </div>
-</div>
 
-<div class="card" onclick="openFree('trailer-player.html')">
-  <div class="coming">COMING SOON</div>
-  <div class="card-content">
-    <div class="card-title">War Protocol</div>
-    <div class="card-desc">Humanity prepares for invasion</div>
+  <div class="section">
+    <h2>Weapons</h2>
+    <div class="glass-card">Coming soon… futuristic combat arsenal.</div>
   </div>
-</div>
 
-<div class="card locked" onclick="openLocked()">
-  <div class="lock-badge">LOCKED</div>
-</div>
+  <div class="section">
+    <h2>Aliens</h2>
+    <div class="glass-card">Coming soon… unknown lifeforms.</div>
+  </div>
 
-<div class="card locked" onclick="openLocked()">
-  <div class="lock-badge">LOCKED</div>
-</div>
+  <div class="section">
+    <h2>Characters & Skins</h2>
+    <div class="glass-card">Coming soon… heroes of the universe.</div>
+  </div>
 
-</div>
-</section>
+  <div class="section">
+    <h2>Vehicles</h2>
+    <div class="glass-card">Coming soon… interstellar travel tech.</div>
+  </div>
 
-<section class="section">
-<h2>Weapons</h2>
-<div class="scroll">
-
-<div class="card locked" onclick="openLocked()">
-  <div class="lock-badge">LOCKED</div>
-</div>
-
-<div class="card locked" onclick="openLocked()">
-  <div class="lock-badge">LOCKED</div>
-</div>
-
-<div class="card locked" onclick="openLocked()">
-  <div class="lock-badge">LOCKED</div>
-</div>
-
-</div>
-</section>
-
-<section class="section">
-<h2>Aliens</h2>
-<div class="scroll">
-
-<div class="card locked" onclick="openLocked()">
-  <div class="lock-badge">LOCKED</div>
-</div>
-
-<div class="card locked" onclick="openLocked()">
-  <div class="lock-badge">LOCKED</div>
-</div>
-
-</div>
-</section>
-
-<section class="section">
-<h2>Characters & Skins</h2>
-<div class="scroll">
-
-<div class="card locked" onclick="openLocked()">
-  <div class="lock-badge">LOCKED</div>
-</div>
-
-<div class="card locked" onclick="openLocked()">
-  <div class="lock-badge">LOCKED</div>
-</div>
-
-</div>
-</section>
-
-<section class="section">
-<h2>Vehicles</h2>
-<div class="scroll">
-
-<div class="card locked" onclick="openLocked()">
-  <div class="lock-badge">LOCKED</div>
-</div>
-
-<div class="card locked" onclick="openLocked()">
-  <div class="lock-badge">LOCKED</div>
-</div>
-
-</div>
-</section>
-
-<section class="section">
-<h2>Universe & Lore</h2>
-<div class="scroll">
-
-<div class="card locked" onclick="openLocked()">
-  <div class="lock-badge">LOCKED</div>
-</div>
-
-<div class="card locked" onclick="openLocked()">
-  <div class="lock-badge">LOCKED</div>
-</div>
-
-</div>
-</section>
-
-<!-- ======================================================= -->
-
-<!-- SLIDER -->
-<div class="slider" id="slider">
-
-  <div class="slider-group">
-    <h4>Universe</h4>
-    <a href="trailers.html">Trailers</a>
-    <a href="story.html">Game Story</a>
-    <a href="aliens.html">Aliens</a>
-    <a href="characters.html">Characters</a>
-    <a href="weapons.html">Weapons</a>
-    <a href="vehicles.html">Vehicles</a>
-    <a href="skins.html">Skins</a>
-    <a href="concepts.html">Concepts</a>
-    <a href="teasers.html">Teasers</a>
-    <a href="community.html">Community Hub</a>
-    <a href="support.html">Support the Mission</a>
-    <a href="downloads.html">Downloads</a>
-    <a href="settings.html">Settings</a>
-    <a href="about.html">About Us</a>
+  <div class="section">
+    <h2>Community</h2>
+    <div class="glass-card">Coming soon… join the mission.</div>
   </div>
 
 </div>
@@ -478,28 +297,13 @@ body{
 <script>
 function toggleSlider(){
   document.getElementById("slider").classList.toggle("active");
+  document.body.classList.toggle("lock");
 }
 
-function openFree(page){
-  location.href = page;
-}
-
-function openLocked(){
-  location.href = "signin.html";
+function go(page){
+  window.location.href = page;
 }
 </script>
-
-<div class="footer">
-  <p>
-    E-LoonSo is a next-generation sci-fi universe built around immersive storytelling,
-    advanced gameplay systems, and evolving worlds.
-    Our mission is to create experiences that feel alive — where technology,
-    creativity, and community move forward together.
-  </p>
-  <p>
-    © 2025 E-LoonSo. The Future Rises Here.
-  </p>
-</div>
 
 </body>
 </html>
