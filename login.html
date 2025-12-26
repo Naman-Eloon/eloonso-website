@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>E-LoonSo | Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Arial,sans-serif;
+  color:white;
+  background:#000;
+  overflow:hidden;
+}
+
+/* BACKGROUND */
+.bg{
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.55)),
+    url("bg.jpg") center/cover no-repeat;
+  z-index:-1;
+}
+
+/* PURE GLASS CARD */
+.card{
+  position:relative;
+  z-index:10;
+
+  width:420px;
+  max-width:90%;
+  padding:36px;
+  border-radius:28px;
+
+  /* 🔥 PURE TRANSPARENT GLASS */
+  background: rgba(255,255,255,0.03);
+
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+
+  border: 1px solid rgba(255,255,255,0.18);
+
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08) inset,
+    0 40px 90px rgba(0,0,0,0.75);
+}
+
+/* GLASS SHINE */
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+
+  background: linear-gradient(
+    130deg,
+    rgba(255,255,255,0.5),
+    rgba(255,255,255,0.08),
+    rgba(255,255,255,0.25)
+  );
+
+  opacity:0.25;
+  pointer-events:none;
+}
+
+/* KEEP CONTENT ABOVE GLASS */
+.card *{
+  position:relative;
+  z-index:2;
+}
+
+h2{
+  text-align:center;
+  margin-bottom:6px;
+  text-shadow:0 0 14px rgba(0,0,0,0.7);
+}
+p{
+  text-align:center;
+  color:#ddd;
+  font-size:14px;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  margin:12px 0;
+  border-radius:14px;
+  border:none;
+  outline:none;
+
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  color:white;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border-radius:999px;
+  border:none;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.primary{
+  background: rgba(0,234,255,0.85);
+  color:black;
+  box-shadow:0 0 30px rgba(0,234,255,0.6);
+}
+
+.divider{
+  text-align:center;
+  margin:18px 0;
+  font-size:13px;
+  color:#bbb;
+}
+
+.auth{
+  display:flex;
+  gap:10px;
+}
+
+.auth button{
+  flex:1;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  border:1px solid rgba(255,255,255,0.25);
+  color:white;
+}
+
+.link{
+  margin-top:18px;
+  text-align:center;
+  font-size:14px;
+}
+.link a{
+  color:#00eaff;
+  text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<div class="card">
+  <h2>Login</h2>
+  <p>Welcome back to E-LoonSo</p>
+
+  <input type="email" placeholder="Email">
+  <input type="password" placeholder="Password">
+
+  <button class="primary">Sign In</button>
+
+  <div class="divider">or continue with</div>
+
+  <div class="auth">
+    <button>🔵 Google</button>
+    <button> Apple</button>
+  </div>
+
+  <div class="link">
+    Don’t have an account?
+    <a href="signup.html">Create new account</a>
+  </div>
+</div>
+
+</body>
+</html>

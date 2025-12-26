@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>E-LoonSo | Community</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  height:100vh;
+  font-family:Arial,sans-serif;
+  background:#0b0f14;
+  color:white;
+  display:flex;
+}
+
+/* ========== CHAT LIST ========== */
+.chat-list{
+  width:280px;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(18px);
+  border-right:1px solid rgba(255,255,255,0.1);
+  display:flex;
+  flex-direction:column;
+}
+.list-header{padding:14px}
+.search{
+  width:100%;
+  padding:10px 14px;
+  border-radius:999px;
+  border:none;
+  background:#000;
+  color:white;
+}
+.chat-item{
+  display:flex;
+  gap:12px;
+  padding:12px;
+  cursor:pointer;
+}
+.chat-item:hover{background:rgba(255,255,255,0.08)}
+.avatar{width:42px;height:42px;border-radius:50%;background:#00eaff}
+
+/* ========== MAIN ========== */
+.main{flex:1;display:flex}
+
+/* ========== CHAT AREA ========== */
+.chat-area{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  background:linear-gradient(#1e324f,#5877a6);
+}
+
+/* HEADER */
+.chat-header{
+  height:64px;
+  padding:0 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(255,255,255,0.18);
+  backdrop-filter:blur(16px);
+}
+.header-left{display:flex;gap:12px;cursor:pointer}
+.header-icons span{margin-left:14px;cursor:pointer}
+
+/* MESSAGES */
+.messages{flex:1;padding:16px;overflow-y:auto}
+.msg{
+  max-width:70%;
+  margin-bottom:12px;
+  padding:12px 14px;
+  border-radius:16px;
+  backdrop-filter:blur(20px);
+}
+.left{background:rgba(255,255,255,0.35)}
+.right{background:rgba(0,0,0,0.45);margin-left:auto}
+
+/* AUDIO MESSAGE */
+.audio-msg{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.audio-msg audio{width:160px}
+
+/* LINK CARD */
+.link-card{
+  background:rgba(0,0,0,0.6);
+  border-radius:14px;
+  overflow:hidden;
+}
+.link-card img{width:100%}
+.link-card .info{padding:10px;font-size:13px}
+
+/* INPUT */
+.input-bar{
+  padding:10px 14px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  background:rgba(255,255,255,0.18);
+}
+.input{
+  flex:1;
+  padding:12px;
+  border-radius:999px;
+  border:none;
+  background:#000;
+  color:white;
+}
+.icon{cursor:pointer;font-size:18px}
+.action{
+  width:44px;height:44px;border-radius:50%;
+  background:#00eaff;color:black;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+}
+
+/* WAVE IN INPUT */
+.wave-input{
+  display:flex;gap:3px;align-items:center;
+}
+.wave-input span{
+  width:3px;height:6px;background:#00eaff;
+  animation:wave 1s infinite ease-in-out;
+}
+.wave-input span:nth-child(2){animation-delay:.1s}
+.wave-input span:nth-child(3){animation-delay:.2s}
+@keyframes wave{
+  50%{height:14px}
+}
+
+/* INFO PANEL */
+.info-panel{
+  width:320px;
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(20px);
+  padding:20px;
+  display:none;
+  overflow-y:auto;
+}
+.info-panel.active{display:block}
+
+/* FILE INPUTS */
+input[type=file]{display:none}
+</style>
+</head>
+
+<body>
+
+<!-- CHAT LIST -->
+<div class="chat-list">
+  <div class="list-header">
+    <input class="search" placeholder="Search users or groups">
+  </div>
+
+  <div class="chat-item" onclick="openChat('User Messho',false)">
+    <div class="avatar"></div>
+    <div>User Messho</div>
+  </div>
+
+  <div class="chat-item" onclick="openChat('Global Community',true)">
+    <div class="avatar"></div>
+    <div>Global Community</div>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- CHAT -->
+<div class="chat-area">
+
+  <div class="chat-header">
+    <div class="header-left" onclick="toggleInfo()">
+      <div class="avatar"></div>
+      <div>
+        <strong id="chatTitle">User Messho</strong><br>
+        <small id="chatStatus">Online</small>
+      </div>
+    </div>
+    <div class="header-icons">
+      <span>📞</span>
+      <span>🎥</span>
+    </div>
+  </div>
+
+  <div class="messages" id="messages"></div>
+
+  <div class="input-bar" id="inputBar">
+    <label class="icon" for="fileInput">📎</label>
+    <label class="icon" for="cameraInput">📷</label>
+
+    <input class="input" id="text" placeholder="Message">
+
+    <div class="action" id="action">🎤</div>
+
+    <input type="file" id="fileInput" multiple>
+    <input type="file" id="cameraInput" accept="image/*" capture="environment">
+  </div>
+
+</div>
+
+<!-- INFO -->
+<div class="info-panel" id="infoPanel"></div>
+
+</div>
+
+<script>
+let isGroup=false;
+let recorder,stream,chunks=[];
+const action=document.getElementById("action");
+const text=document.getElementById("text");
+const messages=document.getElementById("messages");
+
+/* CHAT SWITCH */
+function openChat(name,group){
+  isGroup=group;
+  document.getElementById("chatTitle").innerText=name;
+  document.getElementById("chatStatus").innerText=group?"422 members":"Online";
+  messages.innerHTML="";
+  updateInfo();
+}
+
+/* INFO PANEL */
+function toggleInfo(){
+  document.getElementById("infoPanel").classList.toggle("active");
+}
+function updateInfo(){
+  document.getElementById("infoPanel").innerHTML = isGroup ?
+  `<h2>Global Community</h2><p>422 members</p><p>Description…</p>` :
+  `<h2>User Messho</h2><p>+91 92023 96465</p>`;
+}
+
+/* INPUT LOGIC */
+text.oninput=()=>{action.innerText=text.value?"➤":"🎤"};
+
+action.onclick=async()=>{
+  if(text.value){
+    sendText(text.value);
+    text.value="";
+    action.innerText="🎤";
+  }else{
+    toggleRecording();
+  }
+};
+
+/* TEXT */
+function sendText(t){
+  if(t.includes("http")){sendLink();return;}
+  addMsg(`<div class="msg right">${t}</div>`);
+}
+
+/* LINK */
+function sendLink(){
+  addMsg(`<div class="msg right">
+    <div class="link-card">
+      <img src="https://picsum.photos/400/200">
+      <div class="info"><b>Link Preview</b><br>youtube.com</div>
+    </div>
+  </div>`);
+}
+
+/* FILES */
+fileInput.onchange=e=>{
+  [...e.target.files].forEach(f=>{
+    addMsg(`<div class="msg right">📄 ${f.name}</div>`);
+  });
+};
+
+/* VOICE */
+async function toggleRecording(){
+  if(!recorder){
+    stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    recorder=new MediaRecorder(stream);
+    recorder.ondataavailable=e=>chunks.push(e.data);
+    recorder.onstop=()=>{
+      const blob=new Blob(chunks,{type:"audio/webm"});
+      chunks=[];
+      const url=URL.createObjectURL(blob);
+      addMsg(`<div class="msg right audio-msg">
+        ▶ <audio controls src="${url}"></audio>
+      </div>`);
+    };
+  }
+  if(recorder.state==="inactive"){
+    recorder.start();
+    action.innerText="⏹";
+    showInputWave();
+  }else{
+    recorder.stop();
+    action.innerText="🎤";
+    hideInputWave();
+  }
+}
+
+function showInputWave(){
+  document.getElementById("inputBar").innerHTML +=
+  `<div id="wave" class="wave-input">
+    <span></span><span></span><span></span>
+  </div>`;
+}
+function hideInputWave(){
+  const w=document.getElementById("wave");
+  if(w) w.remove();
+}
+
+/* UTILS */
+function addMsg(html){
+  messages.innerHTML+=html;
+  messages.scrollTop=messages.scrollHeight;
+}
+</script>
+
+</body>
+</html>

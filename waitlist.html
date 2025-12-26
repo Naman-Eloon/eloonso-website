@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Join the Waitlist</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#0b0f14;
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+.box{
+  width:90%;
+  max-width:420px;
+  padding:32px;
+  border-radius:22px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,0.25);
+}
+h2{text-align:center;margin-bottom:20px}
+
+/* AUTH BUTTONS */
+.auth-btn{
+  width:100%;
+  padding:14px;
+  border-radius:999px;
+  border:none;
+  margin-bottom:12px;
+  font-size:14px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+}
+.google{background:white;color:black}
+.apple{background:black;color:white;border:1px solid #444}
+
+input,textarea{
+  width:100%;
+  padding:14px;
+  margin-bottom:14px;
+  border-radius:12px;
+  border:none;
+  background:#000;
+  color:white;
+}
+.submit{
+  width:100%;
+  padding:14px;
+  border-radius:999px;
+  border:none;
+  background:#00eaff;
+  color:black;
+  font-weight:bold;
+}
+.divider{
+  text-align:center;
+  margin:18px 0;
+  color:#888;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>Join the Waitlist</h2>
+
+  <!-- SOCIAL LOGIN -->
+  <button class="auth-btn google">
+    🔵 Continue with Google
+  </button>
+
+  <button class="auth-btn apple">
+     Continue with Apple
+  </button>
+
+  <div class="divider">or</div>
+
+  <!-- CREATE ACCOUNT -->
+  <form name="waitlist" method="POST" data-netlify="true">
+    <input type="hidden" name="form-name" value="waitlist">
+
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="email" name="email" placeholder="Email Address" required>
+    <textarea name="message" rows="4" placeholder="Message (optional)"></textarea>
+
+    <button class="submit">Create New Account</button>
+  </form>
+</div>
+
+</body>
+</html>

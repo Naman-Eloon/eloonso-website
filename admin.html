@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>E-LoonSo Admin Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#0b0f14;
+  color:white;
+}
+
+header{
+  padding:16px 20px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(16px);
+  font-weight:bold;
+}
+
+/* Layout */
+.container{
+  padding:20px;
+  display:grid;
+  gap:20px;
+}
+
+/* Glass card */
+.card{
+  padding:20px;
+  border-radius:18px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,0.15);
+}
+
+.card h3{
+  margin-top:0;
+}
+
+/* Inputs */
+input, select{
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  outline:none;
+  background:rgba(0,0,0,0.6);
+  color:white;
+}
+
+button{
+  margin-top:12px;
+  padding:12px;
+  border-radius:999px;
+  border:none;
+  background:#00eaff;
+  color:black;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* List */
+.item{
+  padding:10px;
+  margin-top:8px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.05);
+  font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<header>⚙️ E-LoonSo Admin Control Panel</header>
+
+<div class="container">
+
+  <!-- E-CREDITS CONTROL -->
+  <div class="card">
+    <h3>⚡ E-Credits Control</h3>
+    <input id="creditsInput" type="number" placeholder="Add E-Credits">
+    <button onclick="addCredits()">Add Credits</button>
+    <p>Current: <b id="creditDisplay">0</b></p>
+  </div>
+
+  <!-- CONTENT UPLOAD -->
+  <div class="card">
+    <h3>📦 Upload Content</h3>
+
+    <select id="contentType">
+      <option value="Thumbnail">Thumbnail</option>
+      <option value="Trailer Video">Trailer Video</option>
+      <option value="Game Build">Game</option>
+      <option value="3D Model">3D Model</option>
+    </select>
+
+    <input id="contentTitle" placeholder="Title / Name">
+    <input id="contentFile" type="file">
+
+    <button onclick="uploadContent()">Upload</button>
+  </div>
+
+  <!-- CONTENT LIST -->
+  <div class="card">
+    <h3>📂 Uploaded Content</h3>
+    <div id="contentList"></div>
+    <button onclick="clearAll()">Clear All</button>
+  </div>
+
+</div>
+
+<script>
+/* E-CREDITS */
+let credits = Number(localStorage.getItem("ecredits")) || 0;
+document.getElementById("creditDisplay").innerText = credits;
+
+function addCredits(){
+  const add = Number(document.getElementById("creditsInput").value);
+  if(add <= 0) return;
+  credits += add;
+  localStorage.setItem("ecredits", credits);
+  document.getElementById("creditDisplay").innerText = credits;
+  alert("E-Credits added ⚡");
+}
+
+/* CONTENT UPLOAD */
+let contents = JSON.parse(localStorage.getItem("contents")) || [];
+renderContent();
+
+function uploadContent(){
+  const type = document.getElementById("contentType").value;
+  const title = document.getElementById("contentTitle").value;
+  const file = document.getElementById("contentFile").files[0];
+
+  if(!title || !file){
+    alert("Please add title and file");
+    return;
+  }
+
+  contents.push({
+    type,
+    title,
+    fileName: file.name,
+    time: new Date().toLocaleString()
+  });
+
+  localStorage.setItem("contents", JSON.stringify(contents));
+  renderContent();
+
+  alert(type + " uploaded (simulated)");
+}
+
+function renderContent(){
+  const list = document.getElementById("contentList");
+  list.innerHTML = "";
+
+  contents.forEach(c=>{
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerText = `${c.type} | ${c.title} | ${c.fileName}`;
+    list.appendChild(div);
+  });
+}
+
+function clearAll(){
+  if(confirm("Clear all content?")){
+    localStorage.removeItem("contents");
+    contents = [];
+    renderContent();
+  }
+}
+</script>
+
+</body>
+</html>

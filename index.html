@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>E-LoonSo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* ================= RESET ================= */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:system-ui, -apple-system, BlinkMacSystemFont;
+  background:#0b0f14;
+  color:white;
+  overflow-x:hidden;
+}
+
+/* ================= NAVBAR ================= */
+.nav{
+  position:fixed;
+  top:0;
+  width:100%;
+  height:64px;
+  padding:0 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,0.15);
+  z-index:100;
+}
+
+.nav-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo{
+  height:28px;
+}
+
+.nav-center{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+.credits{
+  padding:8px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.25);
+  font-size:13px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.credits .add{
+  background:#00eaff;
+  color:black;
+  padding:2px 8px;
+  border-radius:50%;
+  font-weight:bold;
+}
+
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.signin{
+  padding:8px 16px;
+  border-radius:999px;
+  background:#00eaff;
+  color:black;
+  border:none;
+  font-weight:600;
+}
+
+.dots{
+  font-size:22px;
+  cursor:pointer;
+}
+
+/* ================= HERO ================= */
+.hero{
+  height:70vh;
+  margin-top:64px;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.hero-overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  text-align:center;
+}
+
+.hero h1{
+  max-width:900px;
+  font-size:26px;
+  line-height:1.4;
+}
+
+.hero-buttons{
+  margin-top:24px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.cta{
+  padding:16px 34px;
+  border-radius:999px;
+  background:#00eaff;
+  color:black;
+  border:none;
+  font-weight:600;
+  box-shadow:0 0 30px rgba(0,234,255,0.6);
+}
+
+.ghost-group{
+  display:flex;
+  gap:14px;
+}
+
+.ghost{
+  padding:12px 22px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.3);
+  color:white;
+} 
+
+.footer{
+  padding:60px 20px;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  color:#b5b5b5;
+  font-size:14px;
+}
+
+.footer p{
+  max-width:900px;
+  line-height:1.7;
+  margin:0;
+}
+
+.footer .copyright{
+  font-size:13px;
+  opacity:0.7;
+}
+
+/* ================= SECTION SYSTEM (IMPORTANT) ================= */
+
+/* section container */
+.section{
+  padding:26px 16px;
+}
+
+/* section title */
+.section h2{
+  font-size:22px;
+  margin-bottom:12px;
+}
+
+/* horizontal scroll */
+.scroll{
+  display:flex;
+  gap:14px;
+  overflow-x:auto;
+  padding-bottom:8px;
+}
+
+.scroll::-webkit-scrollbar{
+  height:6px;
+}
+.scroll::-webkit-scrollbar-thumb{
+  background:#333;
+  border-radius:10px;
+}
+
+/* card base (THIS IS WHY CARDS WILL SHOW) */
+.card{
+  min-width:220px;
+  height:150px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#1b1f2a,#0c0f16);
+  position:relative;
+  flex-shrink:0;
+  display:flex;
+  align-items:flex-end;
+  cursor:pointer;
+}
+
+/* card content */
+.card-content{
+  padding:12px;
+}
+
+.card-title{
+  font-size:14px;
+  font-weight:600;
+}
+
+.card-desc{
+  font-size:12px;
+  opacity:0.7;
+}
+
+/* coming soon */
+.coming{
+  position:absolute;
+  top:12px;
+  left:12px;
+  font-size:11px;
+  opacity:0.6;
+}
+
+/* locked card */
+.locked{
+  filter:grayscale(1);
+}
+
+.lock-badge{
+  position:absolute;
+  top:10px;
+  right:10px;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:11px;
+  background:rgba(255,0,0,0.15);
+  border:1px solid rgba(255,0,0,0.5);
+}
+
+/* ================= SLIDER ================= */
+.slider{
+  position:fixed;
+  right:-320px;
+  top:0;
+  width:320px;
+  height:100vh;
+  background:linear-gradient(180deg,#0b0f14,#06080d);
+  backdrop-filter:blur(20px);
+  transition:0.4s;
+  z-index:200;
+  padding-top:80px;
+}
+
+.slider.active{
+  right:0;
+}
+
+.slider a{
+  display:block;
+  padding:14px 26px;
+  text-decoration:none;
+  color:white;
+}
+
+.slider a:hover{
+  background:rgba(0,234,255,0.15);
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="nav">
+  <div class="nav-left">
+    <img src="assets/logo.png" class="logo">
+  </div>
+
+  <div class="nav-center">
+    <div class="credits">
+      ⚡ E-Credits: <b>120</b> <span class="add">+</span>
+    </div>
+  </div>
+
+  <div class="nav-right">
+    <button class="signin" onclick="location.href='login.html'">Sign in</button>
+    <span class="dots" onclick="toggleSlider()">⋮</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <video autoplay muted loop playsinline>
+    <source src="https://cdn.coverr.co/videos/coverr-futuristic-gaming-technology-9680/1080p.mp4" type="video/mp4">
+  </video>
+
+  <div class="hero-overlay">
+    <h1>
+      E-LoonSo is building the next era of immersive Sci-Fi ecosystems.
+      Explore the universe before anyone else.
+    </h1>
+
+    <div class="hero-buttons">
+      <button class="cta" onclick="location.href='waitlist.html'">
+        Join the Watchlist
+      </button>
+
+      <div class="ghost-group">
+        <button class="ghost" onclick="location.href='login.html'">
+          Explore the Universe
+        </button>
+        <button class="ghost" onclick="location.href='support.html'">
+          Support the Mission
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================== YOUR SECTIONS HERE ================== -->
+<!-- PASTE YOUR SECTION CODE BELOW THIS LINE -->
+<section class="section">
+<h2>Trailers</h2>
+<div class="scroll">
+
+<div class="card" onclick="openFree('trailer-player.html')">
+  <div class="coming">COMING SOON</div>
+  <div class="card-content">
+    <div class="card-title">First Contact</div>
+    <div class="card-desc">Official cinematic reveal</div>
+  </div>
+</div>
+
+<div class="card" onclick="openFree('trailer-player.html')">
+  <div class="coming">COMING SOON</div>
+  <div class="card-content">
+    <div class="card-title">War Protocol</div>
+    <div class="card-desc">Humanity prepares for invasion</div>
+  </div>
+</div>
+
+<div class="card locked" onclick="openLocked()">
+  <div class="lock-badge">LOCKED</div>
+</div>
+
+<div class="card locked" onclick="openLocked()">
+  <div class="lock-badge">LOCKED</div>
+</div>
+
+</div>
+</section>
+
+<section class="section">
+<h2>Weapons</h2>
+<div class="scroll">
+
+<div class="card locked" onclick="openLocked()">
+  <div class="lock-badge">LOCKED</div>
+</div>
+
+<div class="card locked" onclick="openLocked()">
+  <div class="lock-badge">LOCKED</div>
+</div>
+
+<div class="card locked" onclick="openLocked()">
+  <div class="lock-badge">LOCKED</div>
+</div>
+
+</div>
+</section>
+
+<section class="section">
+<h2>Aliens</h2>
+<div class="scroll">
+
+<div class="card locked" onclick="openLocked()">
+  <div class="lock-badge">LOCKED</div>
+</div>
+
+<div class="card locked" onclick="openLocked()">
+  <div class="lock-badge">LOCKED</div>
+</div>
+
+</div>
+</section>
+
+<section class="section">
+<h2>Characters & Skins</h2>
+<div class="scroll">
+
+<div class="card locked" onclick="openLocked()">
+  <div class="lock-badge">LOCKED</div>
+</div>
+
+<div class="card locked" onclick="openLocked()">
+  <div class="lock-badge">LOCKED</div>
+</div>
+
+</div>
+</section>
+
+<section class="section">
+<h2>Vehicles</h2>
+<div class="scroll">
+
+<div class="card locked" onclick="openLocked()">
+  <div class="lock-badge">LOCKED</div>
+</div>
+
+<div class="card locked" onclick="openLocked()">
+  <div class="lock-badge">LOCKED</div>
+</div>
+
+</div>
+</section>
+
+<section class="section">
+<h2>Universe & Lore</h2>
+<div class="scroll">
+
+<div class="card locked" onclick="openLocked()">
+  <div class="lock-badge">LOCKED</div>
+</div>
+
+<div class="card locked" onclick="openLocked()">
+  <div class="lock-badge">LOCKED</div>
+</div>
+
+</div>
+</section>
+
+<!-- ======================================================= -->
+
+<!-- SLIDER -->
+<div class="slider" id="slider">
+
+  <div class="slider-group">
+    <h4>Universe</h4>
+    <a href="trailers.html">Trailers</a>
+    <a href="story.html">Game Story</a>
+    <a href="aliens.html">Aliens</a>
+    <a href="characters.html">Characters</a>
+    <a href="weapons.html">Weapons</a>
+    <a href="vehicles.html">Vehicles</a>
+    <a href="skins.html">Skins</a>
+    <a href="concepts.html">Concepts</a>
+    <a href="teasers.html">Teasers</a>
+    <a href="community.html">Community Hub</a>
+    <a href="support.html">Support the Mission</a>
+    <a href="downloads.html">Downloads</a>
+    <a href="settings.html">Settings</a>
+    <a href="about.html">About Us</a>
+  </div>
+
+</div>
+
+<script>
+function toggleSlider(){
+  document.getElementById("slider").classList.toggle("active");
+}
+
+function openFree(page){
+  location.href = page;
+}
+
+function openLocked(){
+  location.href = "signin.html";
+}
+</script>
+
+<div class="footer">
+  <p>
+    E-LoonSo is a next-generation sci-fi universe built around immersive storytelling,
+    advanced gameplay systems, and evolving worlds.
+    Our mission is to create experiences that feel alive — where technology,
+    creativity, and community move forward together.
+  </p>
+  <p>
+    © 2025 E-LoonSo. The Future Rises Here.
+  </p>
+</div>
+
+</body>
+</html>
