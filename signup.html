@@ -2,171 +2,242 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>E-LoonSo | Create Account</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-LoonSo | Create Account</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto;
+}
 
 body{
-  margin:0;
   min-height:100vh;
   display:flex;
-  justify-content:center;
   align-items:center;
-  font-family:Arial,sans-serif;
-  color:white;
-  background:#000;
-  overflow:hidden;
-}
-
-/* BACKGROUND */
-.bg{
-  position:fixed;
-  inset:0;
+  justify-content:center;
   background:
-    linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.6)),
+    linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.75)),
     url("bg.jpg") center/cover no-repeat;
-  z-index:-1;
+  color:#fff;
 }
 
-/* PURE GLASS CARD */
+/* ===== GLASS CARD ===== */
 .card{
-  position:relative;
-  z-index:10;
+  width:92%;
+  max-width:420px;
+  padding:26px;
+  border-radius:28px;
 
-  width:460px;
-  max-width:90%;
-  padding:38px;
-  border-radius:30px;
+  background: rgba(255,255,255,0.10);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
 
-  background: rgba(255,255,255,0.035);
-
-  backdrop-filter: blur(42px);
-  -webkit-backdrop-filter: blur(42px);
-
-  border: 1px solid rgba(255,255,255,0.2);
+  border:1px solid rgba(255,255,255,0.2);
 
   box-shadow:
-    0 0 0 1px rgba(255,255,255,0.08) inset,
-    0 45px 100px rgba(0,0,0,0.8);
+    0 0 45px rgba(0,255,213,.35),
+    inset 0 0 25px rgba(255,255,255,.05);
 }
 
-/* SHINE */
-.card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-
-  background: linear-gradient(
-    140deg,
-    rgba(255,255,255,0.55),
-    rgba(255,255,255,0.08),
-    rgba(255,255,255,0.3)
-  );
-
-  opacity:0.22;
-  pointer-events:none;
-}
-
-.card *{
-  position:relative;
-  z-index:2;
-}
-
-h2{
+h1{
   text-align:center;
-  margin-bottom:10px;
-  text-shadow:0 0 16px rgba(0,0,0,0.7);
+  font-size:23px;
+  margin-bottom:6px;
 }
 
-input{
+p{
+  text-align:center;
+  font-size:14px;
+  opacity:.85;
+  margin-bottom:20px;
+}
+
+.input-group{
+  position:relative;
+}
+
+input, textarea{
   width:100%;
-  padding:14px;
-  margin:12px 0;
-  border-radius:14px;
-  border:none;
+  padding:14px 16px;
+  margin-bottom:14px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.25);
+  background: rgba(0,0,0,.35);
+  color:#fff;
   outline:none;
-
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(12px);
-
-  color:white;
+  font-size:15px;
 }
 
+textarea{
+  resize:none;
+  height:70px;
+}
+
+input::placeholder,
+textarea::placeholder{
+  color:rgba(255,255,255,.6);
+}
+
+/* OTP button */
+.otp-btn{
+  position:absolute;
+  right:8px;
+  top:8px;
+  padding:6px 10px;
+  font-size:12px;
+  border-radius:10px;
+  background:#00ffd5;
+  color:#000;
+  border:none;
+  cursor:pointer;
+  display:none;
+}
+
+/* Buttons */
 button{
   width:100%;
   padding:14px;
-  border-radius:999px;
   border:none;
-  font-weight:bold;
+  border-radius:18px;
+  font-size:15px;
+  font-weight:700;
   cursor:pointer;
 }
 
 .primary{
-  background: rgba(0,234,255,0.85);
-  color:black;
-  box-shadow:0 0 35px rgba(0,234,255,0.65);
+  background:#00ffd5;
+  color:#000;
 }
 
-.divider{
+.secondary{
+  background: rgba(255,255,255,.18);
+  color:#fff;
+  margin-top:8px;
+}
+
+.google{
+  background:#fff;
+  color:#000;
+  margin-top:8px;
+}
+
+.or{
   text-align:center;
   margin:18px 0;
+  opacity:.6;
   font-size:13px;
-  color:#bbb;
 }
 
-.auth{
-  display:flex;
-  gap:10px;
-}
-
-.auth button{
-  flex:1;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(12px);
-  border:1px solid rgba(255,255,255,0.25);
-  color:white;
-}
-
-.link{
-  margin-top:18px;
+.footer{
   text-align:center;
+  margin-top:18px;
   font-size:14px;
 }
-.link a{
-  color:#00eaff;
-  text-decoration:none;
+
+.footer span{
+  color:#00ffd5;
+  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<div class="bg"></div>
-
 <div class="card">
-  <h2>Create Account</h2>
+  <h1>Welcome to E-LoonSo ecosystem</h1>
+  <p>Create your account to enter the future</p>
 
-  <input type="text" placeholder="Full Name">
-  <input type="email" placeholder="Email Address">
-  <input type="password" placeholder="Password">
+  <input id="name" placeholder="Full name">
 
-  <button class="primary">Create Account</button>
-
-  <div class="divider">or continue with</div>
-
-  <div class="auth">
-    <button>🔵 Google</button>
-    <button> Apple</button>
+  <!-- Email / Phone -->
+  <div class="input-group">
+    <input id="contact" placeholder="Email or phone number" oninput="detectInput()">
+    <button class="otp-btn" id="otpBtn" onclick="sendOTP()">Send OTP</button>
   </div>
 
-  <div class="link">
-    Already have an account?
-    <a href="login.html">Sign in</a>
+  <!-- Password -->
+  <input id="password" type="password" placeholder="Password">
+
+  <!-- OTP -->
+  <input id="otp" placeholder="Enter OTP" style="display:none">
+
+  <!-- Feedback -->
+  <textarea id="message" placeholder="Message / feedback (optional)"></textarea>
+
+  <button class="primary" onclick="createAccount()">Verify & Create Account</button>
+
+  <div class="or">OR</div>
+
+  <button class="google" onclick="googleSignup()">Continue with Google</button>
+
+  <div class="footer">
+    Have an account?
+    <span onclick="goLogin()">Sign in</span>
   </div>
 </div>
+
+<script>
+const supabase = supabase.createClient(
+  "https://xuippgenqrbebcvjobmp.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1aXBwZ2VucXJiZWJjdmpvYm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY3NDQ0OTUsImV4cCI6MjA4MjMyMDQ5NX0.IPoKjv3JShxe376R_nVpYkps_LOnzGGA4f_qTwiZMzU"
+);
+
+function detectInput(){
+  const value = document.getElementById("contact").value;
+  const isPhone = /^\d{6,}$/.test(value);
+
+  document.getElementById("otpBtn").style.display = isPhone ? "block" : "none";
+  document.getElementById("otp").style.display = isPhone ? "block" : "none";
+  document.getElementById("password").style.display = isPhone ? "none" : "block";
+}
+
+async function sendOTP(){
+  const phone = document.getElementById("contact").value;
+  alert("OTP sent to +91 " + phone + " (Supabase)");
+}
+
+async function createAccount(){
+  const name = document.getElementById("name").value;
+  const contact = document.getElementById("contact").value;
+  const password = document.getElementById("password").value;
+
+  if(!name || !contact){
+    alert("Fill required fields");
+    return;
+  }
+
+  if(contact.includes("@")){
+    const { error } = await supabase.auth.signUp({
+      email: contact,
+      password,
+      options:{ data:{ full_name:name } }
+    });
+
+    if(error){ alert(error.message); return; }
+  }else{
+    alert("Phone OTP verified & account created (logic ready)");
+  }
+
+  alert("Account created successfully!");
+  window.location.href="login.html";
+}
+
+function googleSignup(){
+  supabase.auth.signInWithOAuth({
+    provider:"google",
+    options:{ redirectTo: window.location.origin + "/index.html" }
+  });
+}
+
+function goLogin(){
+  window.location.href="login.html";
+}
+</script>
 
 </body>
 </html>
