@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-LoonSo | Phone Login</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:url("bg.jpg") center/cover no-repeat fixed;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+}
+
+.card{
+  width:92%;
+  max-width:420px;
+  padding:26px;
+  border-radius:22px;
+  background:rgba(0,0,0,0.55);
+  backdrop-filter: blur(18px);
+}
+
+h1{
+  margin:0 0 6px;
+  text-align:center;
+  font-size:24px;
+}
+
+p{
+  margin:0 0 22px;
+  text-align:center;
+  font-size:14px;
+  opacity:.75;
+}
+
+.row{
+  display:flex;
+  gap:10px;
+}
+
+select,input{
+  padding:13px;
+  border-radius:14px;
+  border:none;
+  outline:none;
+  font-size:15px;
+}
+
+select{
+  width:90px;
+}
+
+input{
+  flex:1;
+}
+
+button{
+  width:100%;
+  padding:13px;
+  margin-top:12px;
+  border:none;
+  border-radius:16px;
+  font-weight:700;
+  font-size:15px;
+  cursor:pointer;
+}
+
+.primary{
+  background:#00ffd5;
+  color:#000;
+}
+
+.google{
+  background:#fff;
+  color:#000;
+}
+
+.secondary{
+  background:rgba(255,255,255,.15);
+  color:#fff;
+}
+
+.or{
+  text-align:center;
+  margin:18px 0;
+  opacity:.6;
+  font-size:13px;
+}
+
+.footer{
+  margin-top:18px;
+  text-align:center;
+  font-size:14px;
+}
+
+.footer span{
+  color:#00ffd5;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>Welcome back to E-LoonSo</h1>
+  <p>Sign in using your phone number</p>
+
+  <div class="row">
+    <select id="code">
+      <option value="+91">+91</option>
+      <option value="+1">+1</option>
+      <option value="+44">+44</option>
+    </select>
+    <input id="phone" placeholder="Phone number">
+  </div>
+
+  <button class="primary" onclick="sendOtp()">Send OTP</button>
+
+  <input id="otp" placeholder="Enter OTP" style="margin-top:12px;display:none;">
+  <button class="primary" id="verifyBtn" onclick="verifyOtp()" style="display:none;">
+    Verify & Sign in
+  </button>
+
+  <div class="or">OR</div>
+
+  <button class="google" onclick="googleLogin()">Continue with Google</button>
+  <button class="secondary" onclick="goEmail()">Continue with Email</button>
+
+  <div class="footer">
+    Don’t have an account?
+    <span onclick="goSignup()">Create new account</span>
+  </div>
+</div>
+
+<script>
+const supabase = supabase.createClient(
+  "https://xuippgenqrbebcvjobmp.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1aXBwZ2VucXJiZWJjdmpvYm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY3NDQ0OTUsImV4cCI6MjA4MjMyMDQ5NX0.IPoKjv3JShxe376R_nVpYkps_LOnzGGA4f_qTwiZMzU"
+);
+
+// Send OTP
+async function sendOtp(){
+  const code = document.getElementById("code").value;
+  const phone = document.getElementById("phone").value;
+
+  if(!phone){
+    alert("Enter phone number");
+    return;
+  }
+
+  const { error } = await supabase.auth.signInWithOtp({
+    phone: code + phone
+  });
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  document.getElementById("otp").style.display = "block";
+  document.getElementById("verifyBtn").style.display = "block";
+  alert("OTP sent");
+}
+
+// Verify OTP
+async function verifyOtp(){
+  const code = document.getElementById("code").value;
+  const phone = document.getElementById("phone").value;
+  const token = document.getElementById("otp").value;
+
+  const { error } = await supabase.auth.verifyOtp({
+    phone: code + phone,
+    token,
+    type: "sms"
+  });
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  window.location.href = "index.html";
+}
+
+// Google Login
+async function googleLogin(){
+  await supabase.auth.signInWithOAuth({
+    provider:"google",
+    options:{
+      redirectTo: window.location.origin + "/index.html"
+    }
+  });
+}
+
+// Redirects
+function goEmail(){
+  window.location.href = "login.html";
+}
+
+function goSignup(){
+  window.location.href = "signup.html";
+}
+</script>
+
+</body>
+</html>
