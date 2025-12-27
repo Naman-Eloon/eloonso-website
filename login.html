@@ -3,112 +3,173 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login | E-LoonSo</title>
+<title>E-LoonSo | Login</title>
 
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<script defer src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+*{
+  box-sizing:border-box;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto;
+}
+
 body{
+  margin:0;
   min-height:100vh;
-  background:
-    linear-gradient(rgba(0,0,0,.65),rgba(0,0,0,.65)),
-    url("bg.jpg") center/cover no-repeat;
+  background:url("bg.jpg") center/cover no-repeat fixed;
   display:flex;
   align-items:center;
   justify-content:center;
   color:#fff;
 }
+
 .card{
-  position:relative;
-  z-index:10;
-  width:90%;
-  max-width:380px;
+  width:92%;
+  max-width:420px;
   padding:26px;
-  border-radius:20px;
-  background:rgba(255,255,255,0.08);
-  backdrop-filter:blur(18px);
-  border:1px solid rgba(255,255,255,0.18);
+  border-radius:22px;
+  background:rgba(0,0,0,0.55);
+  backdrop-filter: blur(18px);
 }
+
+h1{
+  margin:0 0 6px;
+  text-align:center;
+  font-size:24px;
+}
+
+p{
+  margin:0 0 22px;
+  text-align:center;
+  font-size:14px;
+  opacity:.75;
+}
+
 input{
-  width:100%;padding:14px;border-radius:12px;border:none;margin-bottom:12px;
+  width:100%;
+  padding:13px;
+  margin:10px 0;
+  border-radius:14px;
+  border:none;
+  outline:none;
+  font-size:15px;
 }
+
 button{
-  width:100%;padding:14px;border-radius:999px;border:none;
-  background:linear-gradient(135deg,#00ffe1,#0077ff);
-  font-weight:600;cursor:pointer;margin-bottom:12px;
+  width:100%;
+  padding:13px;
+  margin-top:12px;
+  border:none;
+  border-radius:16px;
+  font-weight:700;
+  font-size:15px;
+  cursor:pointer;
 }
+
+.primary{
+  background:#00ffd5;
+  color:#000;
+}
+
+.google{
+  background:#fff;
+  color:#000;
+}
+
 .secondary{
   background:rgba(255,255,255,.15);
   color:#fff;
 }
-.footer{text-align:center;font-size:.85rem}
-.footer span{color:#00ffe1;cursor:pointer}
+
+.or{
+  text-align:center;
+  margin:18px 0;
+  opacity:.6;
+  font-size:13px;
+}
+
+.footer{
+  margin-top:18px;
+  text-align:center;
+  font-size:14px;
+}
+
+.footer span{
+  color:#00ffd5;
+  cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
 <div class="card">
-  <h2 style="text-align:center;margin-bottom:10px">Welcome Back</h2>
+  <h1>Welcome back to E-LoonSo</h1>
+  <p>Sign in to continue the ecosystem</p>
 
-  <input id="email" type="email" placeholder="Enter your email">
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
 
-  <button onclick="sendOTP()">Continue</button>
+  <button class="primary" onclick="emailLogin()">Continue</button>
 
-  <button class="secondary" onclick="loginWithGoogle()">
-    Continue with Google
-  </button>
+  <div class="or">OR</div>
+
+  <button class="google" onclick="googleLogin()">Continue with Google</button>
+  <button class="secondary" onclick="goPhone()">Continue with Phone No.</button>
 
   <div class="footer">
     Don’t have an account?
-    <span onclick="createAccount()">Create new</span>
+    <span onclick="goSignup()">Create new account</span>
   </div>
 </div>
 
 <script>
-window.addEventListener("load", () => {
+const supabase = supabase.createClient(
+  "https://xuippgenqrbebcvjobmp.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1aXBwZ2VucXJiZWJjdmpvYm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY3NDQ0OTUsImV4cCI6MjA4MjMyMDQ5NX0.IPoKjv3JShxe376R_nVpYkps_LOnzGGA4f_qTwiZMzU"
+);
 
-  if(!window.supabase){
-    alert("Supabase library failed to load");
+// Email + Password Login
+async function emailLogin(){
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  if(!email || !password){
+    alert("Please enter email and password");
     return;
   }
 
-  /* 🔥 CORRECT SUPABASE CLIENT */
-  const supabaseClient = supabase.createClient(
-    "https://xuippgenqrbebcvjobmp.supabase.co",   // ✅ PROJECT URL
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1aXBwZ2VucXJiZWJjdmpvYm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY3NDQ0OTUsImV4cCI6MjA4MjMyMDQ5NX0.IPoKjv3JShxe376R_nVpYkps_LOnzGGA4f_qTwiZMzU"             // ✅ anon public key
-  );
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
 
-  window.sendOTP = async function(){
-    const email = document.getElementById("email").value.trim();
-    if(!email) return alert("Enter email");
+  if(error){
+    alert(error.message);
+    return;
+  }
 
-    const { error } = await supabaseClient.auth.signInWithOtp({ email });
+  window.location.href = "index.html";
+}
 
-    if(error){
-      alert(error.message);
-    }else{
-      localStorage.setItem("eloonso_email", email);
-      location.href = "verify.html";
+// Google Login
+async function googleLogin(){
+  await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options:{
+      redirectTo: window.location.origin + "/index.html"
     }
-  }
+  });
+}
 
-  window.loginWithGoogle = async function(){
-    await supabaseClient.auth.signInWithOAuth({
-      provider:"google",
-      options:{
-        redirectTo: window.location.origin + "/index.html"
-      }
-    });
-  }
+// Redirects
+function goPhone(){
+  window.location.href = "phone-login.html";
+}
 
-  window.createAccount = function(){
-    document.getElementById("email").focus();
-  }
-
-});
+function goSignup(){
+  window.location.href = "signup.html";
+}
 </script>
 
 </body>
