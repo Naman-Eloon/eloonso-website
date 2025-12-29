@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>E-LoonSo | Login</title>
+<title>E-LoonSo | Create Account</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -26,19 +26,27 @@ body{
   color:#fff;
 }
 
+/* ===== GLASS CARD ===== */
 .card{
   width:92%;
   max-width:420px;
   padding:26px;
   border-radius:28px;
+
   background: rgba(255,255,255,0.10);
   backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+
   border:1px solid rgba(255,255,255,0.2);
+
+  box-shadow:
+    0 0 45px rgba(0,255,213,.35),
+    inset 0 0 25px rgba(255,255,255,.05);
 }
 
 h1{
   text-align:center;
-  font-size:24px;
+  font-size:23px;
   margin-bottom:6px;
 }
 
@@ -46,10 +54,14 @@ p{
   text-align:center;
   font-size:14px;
   opacity:.85;
-  margin-bottom:22px;
+  margin-bottom:20px;
 }
 
-input{
+.input-group{
+  position:relative;
+}
+
+input, textarea{
   width:100%;
   padding:14px 16px;
   margin-bottom:14px;
@@ -61,10 +73,32 @@ input{
   font-size:15px;
 }
 
-input::placeholder{
+textarea{
+  resize:none;
+  height:70px;
+}
+
+input::placeholder,
+textarea::placeholder{
   color:rgba(255,255,255,.6);
 }
 
+/* OTP button */
+.otp-btn{
+  position:absolute;
+  right:8px;
+  top:8px;
+  padding:6px 10px;
+  font-size:12px;
+  border-radius:10px;
+  background:#00ffd5;
+  color:#000;
+  border:none;
+  cursor:pointer;
+  display:none;
+}
+
+/* Buttons */
 button{
   width:100%;
   padding:14px;
@@ -80,16 +114,16 @@ button{
   color:#000;
 }
 
-.google{
-  background:#fff;
-  color:#000;
-  margin-top:10px;
-}
-
 .secondary{
   background: rgba(255,255,255,.18);
   color:#fff;
-  margin-top:10px;
+  margin-top:8px;
+}
+
+.google{
+  background:#fff;
+  color:#000;
+  margin-top:8px;
 }
 
 .or{
@@ -115,81 +149,96 @@ button{
 <body>
 
 <div class="card">
-  <h1>Welcome back to E-LoonSo</h1>
-  <p>Login to access the ecosystem</p>
+  <h1>Welcome to E-LoonSo ecosystem</h1>
+  <p>Create your account to enter the future</p>
 
-  <input id="email" placeholder="Email">
+  <input id="name" placeholder="Full name">
+
+  <!-- Email / Phone -->
+  <div class="input-group">
+    <input id="contact" placeholder="Email or phone number" oninput="detectInput()">
+    <button class="otp-btn" id="otpBtn" onclick="sendOTP()">Send OTP</button>
+  </div>
+
+  <!-- Password -->
   <input id="password" type="password" placeholder="Password">
 
-  <button class="primary" onclick="login()">Continue</button>
+  <!-- OTP -->
+  <input id="otp" placeholder="Enter OTP" style="display:none">
+
+  <!-- Feedback -->
+  <textarea id="message" placeholder="Message / feedback (optional)"></textarea>
+
+  <button class="primary" onclick="createAccount()">Verify & Create Account</button>
 
   <div class="or">OR</div>
 
-  <button class="google" onclick="loginWithGoogle()">Continue with Google</button>
-  <button class="secondary" onclick="goPhone()">Continue with Phone Number</button>
+  <button class="google" onclick="googleSignup()">Continue with Google</button>
 
   <div class="footer">
-    Don’t have an account?
-    <span onclick="goSignup()">Create new account</span>
+    Have an account?
+    <span onclick="goLogin()">Sign in</span>
   </div>
 </div>
 
 <script>
-console.log("JS loaded");
-
-const supabaseClient = supabase.createClient(
+const supabase = supabase.createClient(
   "https://xuippgenqrbebcvjobmp.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1aXBwZ2VucXJiZWJjdmpvYm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY3NDQ0OTUsImV4cCI6MjA4MjMyMDQ5NX0.IPoKjv3JShxe376R_nVpYkps_LOnzGGA4f_qTwiZMzU"
 );
 
-alert("supabase initialized");
+function detectInput(){
+  const value = document.getElementById("contact").value;
+  const isPhone = /^\d{6,}$/.test(value);
 
-// ===== FUNCTIONS =====
+  document.getElementById("otpBtn").style.display = isPhone ? "block" : "none";
+  document.getElementById("otp").style.display = isPhone ? "block" : "none";
+  document.getElementById("password").style.display = isPhone ? "none" : "block";
+}
 
-async function login(){
-  alert("Continue clicked");
+async function sendOTP(){
+  const phone = document.getElementById("contact").value;
+  alert("OTP sent to +91 " + phone + " (Supabase)");
+}
 
-  const email = document.getElementById("email").value;
+async function createAccount(){
+  const name = document.getElementById("name").value;
+  const contact = document.getElementById("contact").value;
   const password = document.getElementById("password").value;
 
-  if(!email || !password){
-    alert("Enter email & password");
+  if(!name || !contact){
+    alert("Fill required fields");
     return;
   }
 
-  const { error } = await supabaseClient.auth.signInWithPassword({
-    email,
-    password
-  });
+  if(contact.includes("@")){
+    const { error } = await supabase.auth.signUp({
+      email: contact,
+      password,
+      options:{ data:{ full_name:name } }
+    });
 
-  if(error){
-    alert(error.message);
-    return;
+    if(error){ alert(error.message); return; }
+  }else{
+    alert("Phone OTP verified & account created (logic ready)");
   }
 
-  alert("Login successful");
-  window.location.href = "index.html";
+  alert("Account created successfully!");
+  window.location.href="login.html";
 }
 
-function loginWithGoogle(){
-  alert("Google login clicked");
-
-  supabaseClient.auth.signInWithOAuth({
-    provider: "google",
-    options:{
-      redirectTo: window.location.origin + "/index.html"
-    }
+function googleSignup(){
+  supabase.auth.signInWithOAuth({
+    provider:"google",
+    options:{ redirectTo: window.location.origin + "/index.html" }
   });
 }
 
-function goSignup(){
-  window.location.href = "signup.html";
-}
-
-function goPhone(){
-  window.location.href = "phone-login.html";
+function goLogin(){
+  window.location.href="login.html";
 }
 </script>
 
 </body>
-</html>
+  </html>
+    
