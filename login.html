@@ -9,17 +9,20 @@
 
 <style>
 *{
+  margin:0;
+  padding:0;
   box-sizing:border-box;
   font-family: system-ui, -apple-system, Segoe UI, Roboto;
 }
 
 body{
-  margin:0;
   min-height:100vh;
-  background:url("bg.jpg") center/cover no-repeat fixed;
   display:flex;
   align-items:center;
   justify-content:center;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.75)),
+    url("bg.jpg") center/cover no-repeat;
   color:#fff;
 }
 
@@ -27,42 +30,48 @@ body{
   width:92%;
   max-width:420px;
   padding:26px;
-  border-radius:22px;
-  background:rgba(0,0,0,0.55);
-  backdrop-filter: blur(18px);
+  border-radius:28px;
+  background: rgba(255,255,255,0.10);
+  backdrop-filter: blur(22px);
+  border:1px solid rgba(255,255,255,0.2);
 }
 
 h1{
-  margin:0 0 6px;
   text-align:center;
   font-size:24px;
+  margin-bottom:6px;
 }
 
 p{
-  margin:0 0 22px;
   text-align:center;
   font-size:14px;
-  opacity:.75;
+  opacity:.85;
+  margin-bottom:22px;
 }
 
 input{
   width:100%;
-  padding:13px;
-  margin:10px 0;
-  border-radius:14px;
-  border:none;
+  padding:14px 16px;
+  margin-bottom:14px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.25);
+  background: rgba(0,0,0,.35);
+  color:#fff;
   outline:none;
   font-size:15px;
 }
 
+input::placeholder{
+  color:rgba(255,255,255,.6);
+}
+
 button{
   width:100%;
-  padding:13px;
-  margin-top:12px;
+  padding:14px;
   border:none;
-  border-radius:16px;
-  font-weight:700;
+  border-radius:18px;
   font-size:15px;
+  font-weight:700;
   cursor:pointer;
 }
 
@@ -74,11 +83,13 @@ button{
 .google{
   background:#fff;
   color:#000;
+  margin-top:10px;
 }
 
 .secondary{
-  background:rgba(255,255,255,.15);
+  background: rgba(255,255,255,.18);
   color:#fff;
+  margin-top:10px;
 }
 
 .or{
@@ -89,8 +100,8 @@ button{
 }
 
 .footer{
-  margin-top:18px;
   text-align:center;
+  margin-top:18px;
   font-size:14px;
 }
 
@@ -105,17 +116,17 @@ button{
 
 <div class="card">
   <h1>Welcome back to E-LoonSo</h1>
-  <p>Sign in to continue the ecosystem</p>
+  <p>Login to access the ecosystem</p>
 
-  <input id="email" type="email" placeholder="Email">
+  <input id="email" placeholder="Email">
   <input id="password" type="password" placeholder="Password">
 
-  <button class="primary" onclick="emailLogin()">Continue</button>
+  <button class="primary" onclick="login()">Continue</button>
 
   <div class="or">OR</div>
 
-  <button class="google" onclick="googleLogin()">Continue with Google</button>
-  <button class="secondary" onclick="goPhone()">Continue with Phone No.</button>
+  <button class="google" onclick="loginWithGoogle()">Continue with Google</button>
+  <button class="secondary" onclick="goPhone()">Continue with Phone Number</button>
 
   <div class="footer">
     Don’t have an account?
@@ -124,22 +135,29 @@ button{
 </div>
 
 <script>
-const supabase = supabase.createClient(
+console.log("JS loaded");
+
+const supabaseClient = supabase.createClient(
   "https://xuippgenqrbebcvjobmp.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1aXBwZ2VucXJiZWJjdmpvYm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY3NDQ0OTUsImV4cCI6MjA4MjMyMDQ5NX0.IPoKjv3JShxe376R_nVpYkps_LOnzGGA4f_qTwiZMzU"
 );
 
-// Email + Password Login
-async function emailLogin(){
+alert("supabase initialized");
+
+// ===== FUNCTIONS =====
+
+async function login(){
+  alert("Continue clicked");
+
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
   if(!email || !password){
-    alert("Please enter email and password");
+    alert("Enter email & password");
     return;
   }
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { error } = await supabaseClient.auth.signInWithPassword({
     email,
     password
   });
@@ -149,12 +167,14 @@ async function emailLogin(){
     return;
   }
 
+  alert("Login successful");
   window.location.href = "index.html";
 }
 
-// Google Login
-async function googleLogin(){
-  await supabase.auth.signInWithOAuth({
+function loginWithGoogle(){
+  alert("Google login clicked");
+
+  supabaseClient.auth.signInWithOAuth({
     provider: "google",
     options:{
       redirectTo: window.location.origin + "/index.html"
@@ -162,15 +182,14 @@ async function googleLogin(){
   });
 }
 
-// Redirects
-function goPhone(){
-  window.location.href = "phone-login.html";
-}
-
 function goSignup(){
   window.location.href = "signup.html";
+}
+
+function goPhone(){
+  window.location.href = "phone-login.html";
 }
 </script>
 
 </body>
-</html>
+  </html>
