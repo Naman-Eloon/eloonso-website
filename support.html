@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>E-LoonSo</title>
+<title>Support the Mission | E-LoonSo</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+*{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:Arial, sans-serif;
@@ -13,6 +15,7 @@ body{
   color:white;
 }
 
+/* HEADER */
 .header{
   height:64px;
   display:flex;
@@ -28,34 +31,217 @@ body{
   font-weight:bold;
 }
 
+/* MAIN */
 main{
-  padding:30px 18px;
+  max-width:520px;
+  margin:auto;
+  padding:28px 18px 60px;
 }
 
-.page-title{
-  font-size:26px;
-  margin-bottom:10px;
+h1{
+  text-align:center;
+  margin-bottom:6px;
 }
 
-.page-desc{
+p{
+  text-align:center;
   color:#aaa;
-  max-width:700px;
+  font-size:14px;
+}
+
+/* GLASS CARD */
+.card{
+  margin-top:22px;
+  padding:22px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,0.15);
+}
+
+/* INPUT */
+input, textarea{
+  width:100%;
+  margin-top:14px;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+  outline:none;
+  background:rgba(0,0,0,0.55);
+  color:white;
+  font-size:14px;
+}
+
+/* BUTTONS */
+.upi-btn{
+  display:block;
+  width:100%;
+  margin-top:18px;
+  padding:15px;
+  border-radius:999px;
+  background:#00eaff;
+  color:black;
+  font-weight:bold;
+  text-align:center;
+  text-decoration:none;
+  box-shadow:0 0 25px rgba(0,234,255,0.6);
+}
+
+.paid-btn{
+  display:block;
+  width:100%;
+  margin-top:12px;
+  padding:15px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.35);
+  background:rgba(255,255,255,0.08);
+  color:white;
+  cursor:pointer;
+}
+
+/* REWARDS */
+.reward{
+  padding:14px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  margin-bottom:12px;
+}
+
+.reward span{
+  display:block;
+  font-weight:600;
+  color:#00eaff;
+  margin-bottom:4px;
+}
+
+.reward small{
+  font-size:13px;
+  line-height:1.4;
+  color:#ddd;
 }
 </style>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <div class="header">
   <a href="index.html">← E-LoonSo</a>
 </div>
 
 <main>
-  <h1 class="page-title">Support the Mission</h1>
-<p class="page-desc">
-Support development through donations, early access, and exclusive rewards.
-</p>
+  <h1>Support the Mission</h1>
+  <p>
+    Help us build the next era of immersive sci-fi experiences.  
+    Your support directly fuels development.
+  </p>
+
+  <!-- DONATION CARD -->
+  <div class="card">
+    <h3 style="text-align:center;margin-bottom:10px">
+      Donate via UPI
+    </h3>
+
+    <!-- AMOUNT INPUT -->
+    <input id="amount" type="number" placeholder="Enter amount (₹)" min="1">
+
+    <!-- MESSAGE -->
+    <textarea id="message" rows="3"
+      placeholder="Message (optional)"></textarea>
+
+    <!-- PAY BUTTON -->
+    <a href="#" class="upi-btn" onclick="payUPI()">
+      Pay with UPI
+    </a>
+
+    <!-- CONFIRM BUTTON -->
+    <button class="paid-btn" onclick="confirmPaid()">
+      I’ve Paid
+    </button>
+  </div>
+
+  <!-- REWARDS SECTION -->
+  <div class="card">
+    <h3 style="text-align:center;margin-bottom:14px">
+      Supporter Rewards 🎁
+    </h3>
+
+    <div class="reward">
+      <span>₹50 – ₹99</span>
+      <small>
+        • Supporter Badge<br>
+        • Thank-you mention on Community Page
+      </small>
+    </div>
+
+    <div class="reward">
+      <span>₹100 – ₹299</span>
+      <small>
+        • Early Trailer Access<br>
+        • 100 E-Credits ⚡<br>
+        • Supporter Badge
+      </small>
+    </div>
+
+    <div class="reward">
+      <span>₹300 – ₹699</span>
+      <small>
+        • Exclusive Concept Art<br>
+        • 300 E-Credits ⚡<br>
+        • Early Game Updates
+      </small>
+    </div>
+
+    <div class="reward">
+      <span>₹700+</span>
+      <small>
+        • Beta Access Priority 🎮<br>
+        • 700+ E-Credits ⚡<br>
+        • Name in Credits / Wall of Supporters
+      </small>
+    </div>
+
+    <p style="font-size:12px;color:#aaa;text-align:center;margin-top:10px">
+      Rewards are delivered after payment verification.
+    </p>
+  </div>
+
 </main>
+
+<script>
+const UPI_ID = "6390702046@apl";   // 🔴 CHANGE THIS
+const PAYEE_NAME = "E-LoonSo";
+
+function payUPI(){
+  const amount = document.getElementById("amount").value;
+
+  if(!amount || amount <= 0){
+    alert("Please enter a valid amount");
+    return;
+  }
+
+  const upiLink =
+    "upi://pay" +
+    "?pa=" + encodeURIComponent(UPI_ID) +
+    "&pn=" + encodeURIComponent(PAYEE_NAME) +
+    "&am=" + encodeURIComponent(amount) +
+    "&cu=INR";
+
+  window.location.href = upiLink;
+}
+
+<script>
+function confirmPaid(){
+  alert(
+    "Payment received 👍\n\n" +
+    "Please wait while we verify.\n" +
+    "E-Credits will be added manually."
+  );
+
+  localStorage.setItem("pendingDonation","true");
+}
+</script>
 
 </body>
 </html>
