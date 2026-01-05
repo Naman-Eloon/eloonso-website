@@ -127,7 +127,7 @@ button{border:none;background:none;cursor:pointer;color:inherit}
 }
 
 /* ================= SIDE MENU ================= */
-.menu-slider{
+.side-menu{
   position:fixed;
   top:0;
   left:-320px;
@@ -143,7 +143,7 @@ button{border:none;background:none;cursor:pointer;color:inherit}
   transition:.35s ease;
 }
 
-.menu-slider.active{
+.side-menu.active{
   left:0;
 }
 
@@ -152,7 +152,7 @@ button{border:none;background:none;cursor:pointer;color:inherit}
   font-size:16px;
 }
 
-.menu-slider a{
+.side-menu a{
   display:block;
   padding:10px 12px;
   border-radius:12px;
@@ -161,7 +161,7 @@ button{border:none;background:none;cursor:pointer;color:inherit}
   opacity:.85;
 }
 
-.menu-slider a:hover{
+.side-menu a:hover{
   background:rgba(255,255,255,.1);
   opacity:1;
 }
@@ -174,7 +174,7 @@ button{border:none;background:none;cursor:pointer;color:inherit}
 <div class="topbar">
 
   <div class="top-left">
-    <div class="menu-slider" onclick="toggleMenu()">☰</div>
+    <div class="sideMenu" onclick="toggleMenu()">☰</div>
     <img src="logo.png" alt="E-LoonSo">
     <div class="brand"></div>
   </div>
@@ -187,7 +187,7 @@ button{border:none;background:none;cursor:pointer;color:inherit}
 </div>
 
 <!-- ================= SIDE MENU ================= -->
-<div class="menu-slider" id="menuSlider">
+<div class="side-menu" id="sideMenu">
   <h3>Universe</h3>
   <a>Trailers</a>
   <a>Story</a>
