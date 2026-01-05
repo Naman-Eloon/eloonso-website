@@ -1,518 +1,778 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 <title>E-LoonSo</title>
 
-<!-- Material Icons -->
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --glass: rgba(255,255,255,0.08);
-  --border: rgba(255,255,255,0.18);
-}
-
-/* RESET */
+/* ================= GLOBAL ================= */
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family:'Inter', system-ui, sans-serif;
 }
 
 body{
-  background:#000;
+  min-height:100vh;
+  background:linear-gradient(to bottom, #050607, #0b0d10);
   color:#fff;
   overflow-x:hidden;
 }
 
-/* ================= NAVBAR ================= */
-.navbar{
+/* ================= NORTH POLE FONT ================= */
+/* NOTE:
+   North Pole is usually a custom font.
+   Keep northpole.ttf in same folder or /fonts/
+*/
+@font-face{
+  font-family:'NorthPole';
+  src:url('northpole.ttf') format('truetype');
+  font-weight:normal;
+  font-style:normal;
+}
+
+/* ================= UTIL ================= */
+.hidden{display:none}
+button{border:none;background:none;cursor:pointer;color:inherit}
+
+/* ================= TOP BAR ================= */
+.topbar{
   position:fixed;
-  top:12px;
+  top:16px;
   left:50%;
   transform:translateX(-50%);
-  width:95%;
-  height:58px;
-  padding:0 14px;
+  width:92%;
+  max-width:1280px;
+  height:66px;
+  padding:0 18px;
+
   display:flex;
   align-items:center;
   justify-content:space-between;
-  background:var(--glass);
-  backdrop-filter:blur(18px);
-  border:1px solid var(--border);
+
+  background:rgba(255,255,255,.10);
+  backdrop-filter:blur(22px);
+  border:1px solid rgba(255,255,255,.22);
   border-radius:999px;
   z-index:1000;
 }
 
-.nav-left,
-.nav-right{
+/* LEFT */
+.top-left{
   display:flex;
   align-items:center;
-  gap:12px;
+  gap:14px;
 }
 
+/* HAMBURGER */
 .menu-btn{
-  font-size:26px;
-  cursor:pointer;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  background:rgba(255,255,255,.15);
 }
 
+/* LOGO */
+.top-left img{
+  width:34px;
+  height:34px;
+}
+
+/* BRAND */
 .brand{
-  font-weight:600;
+  font-family:'NorthPole', 'Inter', sans-serif;
+  font-size:20px;
   letter-spacing:1px;
 }
 
-.credits{
-  padding:6px 12px;
-  border-radius:999px;
-  background:rgba(0,255,225,0.15);
-  border:1px solid rgba(0,255,225,0.4);
-  font-size:12px;
-}
-
-.sign-btn{
-  padding:8px 16px;
-  border-radius:999px;
-  background:linear-gradient(135deg,#00ffe1,#0077ff);
-  color:#000;
-  font-weight:600;
-  border:none;
-  cursor:pointer;
-}
-
-/* ================= SLIDER ================= */
-.slider{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.85);
-  backdrop-filter:blur(20px);
-  transform:translateX(-100%);
-  transition:0.4s;
-  z-index:999;
-  padding:90px 20px 20px; /* navbar clearance */
-}
-
-.slider.active{
-  transform:translateX(0);
-}
-
-.slider h3{
-  margin-bottom:16px;
-  font-weight:600;
-}
-
-.slider a{
+/* RIGHT */
+.top-right{
   display:flex;
   align-items:center;
-  gap:12px;
-  padding:12px;
-  margin-bottom:8px;
-  border-radius:12px;
-  background:rgba(255,255,255,0.05);
-  text-decoration:none;
-  color:#fff;
-  font-size:0.95rem;
-}
-
-/* body lock when slider open */
-body.lock{
-  overflow:hidden;
-}
-
-.sections{
-  padding:40px 20px;
-}
-
-.section{
-  margin-bottom:36px;
-}
-
-.glass-card{
-  padding:20px;
-  border-radius:18px;
-  background:rgba(255,255,255,0.08);
-  backdrop-filter:blur(16px);
-  border:1px solid rgba(255,255,255,0.18);
-  font-size:0.95rem;
-}
-
-.glass-card.placeholder{
-  min-height:120px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  text-align:center;
-  opacity:0.85;
-}
-
-.cards{
-  display:flex;
   gap:14px;
-  overflow-x:auto;
-  margin-top:14px;
 }
 
-/* ================= HERO ================= */
-.hero{
-  height:100vh;
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:20px;
-}
-
-.hero video{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  opacity:0.35;
-}
-
-.hero::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.2),
-    #000
-  );
-}
-
-.hero-content{
-  position:relative;
-  z-index:2;
-  max-width:520px;
-}
-
-.hero h1{
-  font-size:2rem;
-  margin-bottom:12px;
-}
-
-.hero p{
-  opacity:0.85;
-  margin-bottom:22px;
-  font-size:0.95rem;
-}
-
-/* HERO BUTTONS */
-.hero-btn{
-  display:block;
-  margin:10px auto;
-  width:220px;
-  padding:14px;
+/* E-CREDIT */
+.ecredit{
+  padding:8px 14px;
   border-radius:999px;
-  background:linear-gradient(135deg,#00ffe1,#0077ff);
-  color:#000;
+  background:rgba(255,255,255,.15);
+  font-size:14px;
   font-weight:600;
-  border:none;
+}
+
+/* PROFILE */
+.profile{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  object-fit:cover;
   cursor:pointer;
 }
 
-.hero-btn.alt{
-  background:transparent;
-  color:#fff;
-  border:1px solid rgba(255,255,255,0.35);
+/* ================= SIDE MENU ================= */
+.side-menu{
+  position:fixed;
+  top:0;
+  left:-320px;
+  width:300px;
+  height:100vh;
+  background:rgba(10,12,16,.95);
+  backdrop-filter:blur(22px);
+  border-right:1px solid rgba(255,255,255,.18);
+  padding:24px 18px;
+  transition:.35s ease;
+  z-index:999;
+}
+
+.side-menu.active{
+  left:0;
+}
+
+.side-menu h3{
+  font-size:16px;
+  margin:16px 0 10px;
+}
+
+.side-menu a{
+  display:block;
+  padding:10px 12px;
+  border-radius:12px;
+  font-size:14px;
+  opacity:.85;
+}
+
+.side-menu a:hover{
+  background:rgba(255,255,255,.1);
+  opacity:1;
 }
 </style>
 </head>
 
 <body>
 
-<!-- ================= SLIDER ================= -->
-<div class="slider" id="slider">
+<!-- ================= TOP BAR ================= -->
+<div class="topbar">
+
+  <div class="top-left">
+    <div class="menu-btn" onclick="toggleMenu()">☰</div>
+    <img src="logo.png" alt="E-LoonSo">
+    <div class="brand">E-LoonSo</div>
+  </div>
+
+  <div class="top-right">
+    <div class="ecredit" onclick="openCredits()">⚡ E-Credit: <span id="creditVal">00</span></div>
+    <img id="profileImg" class="profile" src="avatar.png">
+  </div>
+
+</div>
+
+<!-- ================= SIDE MENU ================= -->
+<div class="side-menu" id="sideMenu">
   <h3>Universe</h3>
+  <a>Trailers</a>
+  <a>World & Lore</a>
+  <a>Characters</a>
+  <a>Aliens</a>
+  <a>Weapons</a>
+  <a>Vehicles</a>
 
-  <a href="index.html">
-    <span class="material-icons">home</span> Home
-  </a>
-
-  <a href="trailers.html">
-    <span class="material-icons">movie</span> Trailers
-  </a>
-
-  <a href="story.html">
-    <span class="material-icons">menu_book</span> Game Story
-  </a>
-
-  <a href="aliens.html">
-    <span class="material-icons">public</span> Aliens
-  </a>
-
-  <a href="characters.html">
-    <span class="material-icons">person</span> Characters
-  </a>
-
-  <a href="weapons.html">
-    <span class="material-icons">security</span> Weapons
-  </a>
-
-  <a href="vehicles.html">
-    <span class="material-icons">directions_car</span> Vehicles
-  </a>
-
-  <a href="community.html">
-    <span class="material-icons">group</span> Community
-  </a>
-
-  <a href="support.html">
-    <span class="material-icons">volunteer_activism</span> Support the Mission
-  </a>
+  <h3>More</h3>
+  <a>Community</a>
+  <a>Support Us</a>
+  <a>Give Ideas</a>
+  <a>About Us</a>
 </div>
 
-<!-- ================= NAVBAR ================= -->
-<div class="navbar">
-  <div class="nav-left">
-    <span class="material-icons menu-btn" onclick="toggleSlider()">menu</span>
-  </div>
+<script>
+/* ================= SUPABASE ================= */
+const supabaseClient = supabase.createClient(
+  "https://xuippgenqrbebcvjobmp.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1aXBwZ2VucXJiZWJjdmpvYm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY3NDQ0OTUsImV4cCI6MjA4MjMyMDQ5NX0.IPoKjv3JShxe376R_nVpYkps_LOnzGGA4f_qTwiZMzU"
+);
 
-  <div class="brand">E-LoonSo</div>
+let CURRENT_USER=null;
 
-  <div class="nav-right">
-    <div class="credits" id="credits">⚡ 120</div>
-    <button class="sign-btn" onclick="go('login.html')">Sign in</button>
-  </div>
-</div>
+/* ================= FORCE LOGIN ================= */
+(async function(){
+  const { data:{ user } } = await supabaseClient.auth.getUser();
+  if(!user){
+    location.replace("login.html");
+    return;
+  }
+  CURRENT_USER=user;
+  initUserUI();
+})();
 
-<!-- ================= HERO ================= -->
+/* ================= UI INIT ================= */
+function initUserUI(){
+  document.getElementById("profileImg").src =
+    CURRENT_USER.user_metadata?.avatar_url || "avatar.png";
+
+  document.getElementById("creditVal").innerText="00";
+}
+
+/* ================= ACTIONS ================= */
+function toggleMenu(){
+  document.getElementById("sideMenu").classList.toggle("active");
+}
+
+function openCredits(){
+  alert("E-Credit system (admin controlled) coming soon");
+}
+</script>
+
+
+<style>
+/* ================= HERO ================= */
+.hero{
+  position:relative;
+  width:100%;
+  height:85vh;
+  margin-top:110px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* Background Video */
+.hero video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:brightness(.55);
+}
+
+/* Overlay for readability */
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(5,7,9,.45),
+      rgba(5,7,9,.85)
+    );
+}
+
+/* Hero Content */
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:900px;
+  text-align:center;
+  padding:0 18px;
+}
+
+.hero-content h1{
+  font-size:clamp(28px,4vw,52px);
+  font-weight:800;
+  margin-bottom:14px;
+}
+
+.hero-content p{
+  font-size:15px;
+  opacity:.85;
+  margin-bottom:26px;
+}
+
+/* Button groups */
+.hero-actions{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  align-items:center;
+}
+
+.hero-row{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+/* Buttons */
+.hero-btn{
+  padding:12px 26px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.25s ease;
+}
+
+.primary{
+  background:#00ffd5;
+  color:#000;
+}
+
+.secondary{
+  background:rgba(255,255,255,.18);
+  color:#fff;
+}
+
+.hero-btn:hover{
+  transform:translateY(-2px);
+}
+</style>
+
+<!-- ================= HERO HTML ================= -->
 <section class="hero">
+
+  <!-- BG VIDEO (temporary sample, change later) -->
   <video autoplay muted loop playsinline>
-    <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4">
+    <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4">
   </video>
 
   <div class="hero-content">
-    <h1>The Future Rises Here</h1>
-    <p>Explore the next era of immersive sci-fi ecosystems.</p>
+    <h1>Welcome the era of next-gen universes</h1>
+    <p>
+      E-LoonSo is not just a game — it’s a living sci-fi ecosystem
+      built by creators, players and dreamers.
+    </p>
 
-    <button class="hero-btn" onclick="go('watchlist.html')">
-      Join the Watchlist
-    </button>
+    <div class="hero-actions">
 
-    <button class="hero-btn alt" onclick="go('universe.html')">
-      Explore the Universe
-    </button>
+      <!-- Main CTA -->
+      <div class="hero-row">
+        <button class="hero-btn primary" onclick="watchTrailer()">
+          ▶ Watch Trailer & Videos
+        </button>
 
-    <button class="hero-btn alt" onclick="go('support.html')">
-      Support the Mission
-    </button>
+        <button class="hero-btn secondary" onclick="supportUs()">
+          ❤️ Support Us
+        </button>
+      </div>
+
+      <!-- Secondary CTA -->
+      <div class="hero-row">
+        <button class="hero-btn secondary" onclick="joinCommunity()">
+          💬 Join Community
+        </button>
+
+        <button class="hero-btn secondary" onclick="giveIdeas()">
+          💡 Give Ideas
+        </button>
+      </div>
+
+    </div>
   </div>
+
 </section>
-<!-- ================= SECTIONS ================= -->
+
+<script>
+/* =====================================================
+   HERO ACTIONS (ALL WORKING)
+===================================================== */
+
+function watchTrailer(){
+  window.location.href = "trailers.html";
+}
+
+function supportUs(){
+  window.location.href = "support.html";
+}
+
+function joinCommunity(){
+  window.location.href = "community.html";
+}
+
+function giveIdeas(){
+  window.location.href = "ideas.html";
+}
+</script>
+
+<!-- =====================================================
+   PART 3 START YAHAN SE AAYEGA
+   (SECTIONS - 10+)
+===================================================== -->
+<!-- =====================================================
+   PART 3 : MAIN SECTIONS
+===================================================== -->
+
+<style>
+/* ================= SECTIONS WRAPPER ================= */
+.sections{
+  max-width:1280px;
+  margin:0 auto;
+  padding:70px 18px 0;
+}
+
+/* ================= SECTION BLOCK ================= */
+.section{
+  margin-bottom:80px;
+}
+
+.section-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  margin-bottom:18px;
+}
+
+.section-header h2{
+  font-size:22px;
+  font-weight:700;
+}
+
+.section-header p{
+  font-size:13px;
+  opacity:.7;
+}
+
+/* ================= HORIZONTAL SCROLL ================= */
+.card-row{
+  display:flex;
+  gap:18px;
+  overflow-x:auto;
+  padding-bottom:8px;
+}
+
+.card-row::-webkit-scrollbar{
+  height:6px;
+}
+.card-row::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,.18);
+  border-radius:999px;
+}
+
+/* ================= CARD ================= */
+.card{
+  min-width:260px;
+  height:160px;
+  border-radius:22px;
+  padding:18px;
+  background:rgba(255,255,255,.10);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.22);
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  cursor:pointer;
+}
+
+.card h4{
+  font-size:16px;
+  margin-bottom:4px;
+}
+
+.card span{
+  font-size:13px;
+  opacity:.7;
+}
+
+/* ================= PLACEHOLDER ================= */
+.placeholder{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:14px;
+  opacity:.85;
+}
+</style>
+
+<!-- ================= ALL SECTIONS ================= -->
 <div class="sections">
 
-  <!-- TRAILERS -->
-  <div class="section" data-section="trailers">
-    <h2>Trailers</h2>
-
-    <div class="glass-card placeholder">
-      <strong>Coming Soon</strong><br><br>
-      Official cinematic trailers, gameplay reveals and story videos
-      will appear here.
+  <!-- 1. TRAILERS -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Trailers</h2>
+      <p>Cinematic reveals & teasers</p>
     </div>
-
-    <div class="cards"></div>
+    <div class="card-row">
+      <div class="card placeholder">Coming Soon</div>
+      <div class="card placeholder">Coming Soon</div>
+      <div class="card placeholder">Coming Soon</div>
+    </div>
   </div>
 
-  <!-- WEAPONS -->
-  <div class="section" data-section="weapons">
-    <h2>Weapons</h2>
-
-    <div class="glass-card placeholder">
-      <strong>Coming Soon</strong><br><br>
-      Advanced futuristic weapons, combat tools and special gear
-      will be revealed here.
+  <!-- 2. GAMES -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Games</h2>
+      <p>Playable universes</p>
     </div>
-
-    <div class="cards"></div>
+    <div class="card-row">
+      <div class="card placeholder">Coming Soon</div>
+      <div class="card placeholder">Coming Soon</div>
+    </div>
   </div>
 
-  <!-- ALIENS -->
-  <div class="section" data-section="aliens">
-    <h2>Aliens</h2>
-
-    <div class="glass-card placeholder">
-      <strong>Coming Soon</strong><br><br>
-      Unknown alien species from distant planets
-      will be showcased here.
+  <!-- 3. UNIVERSE -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Universe</h2>
+      <p>Worlds, lore & factions</p>
     </div>
-
-    <div class="cards"></div>
+    <div class="card-row">
+      <div class="card placeholder">Coming Soon</div>
+      <div class="card placeholder">Coming Soon</div>
+      <div class="card placeholder">Coming Soon</div>
+    </div>
   </div>
 
-  <!-- CHARACTERS -->
-  <div class="section" data-section="characters">
-    <h2>Characters</h2>
-
-    <div class="glass-card placeholder">
-      <strong>Coming Soon</strong><br><br>
-      Heroes, villains and key characters of the
-      E-LoonSo universe will appear here.
+  <!-- 4. CHARACTERS -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Characters</h2>
+      <p>Heroes & legends</p>
     </div>
-
-    <div class="cards"></div>
+    <div class="card-row">
+      <div class="card placeholder">Coming Soon</div>
+      <div class="card placeholder">Coming Soon</div>
+    </div>
   </div>
 
-  <!-- SKINS -->
-  <div class="section" data-section="skins">
-    <h2>Skins & Customization</h2>
-
-    <div class="glass-card placeholder">
-      <strong>Coming Soon</strong><br><br>
-      Character skins, visual upgrades and
-      customization options are on the way.
+  <!-- 5. ALIENS -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Aliens</h2>
+      <p>Enemies & civilizations</p>
     </div>
-
-    <div class="cards"></div>
+    <div class="card-row">
+      <div class="card placeholder">Coming Soon</div>
+      <div class="card placeholder">Coming Soon</div>
+    </div>
   </div>
 
-  <!-- VEHICLES -->
-  <div class="section" data-section="vehicles">
-    <h2>Vehicles</h2>
-
-    <div class="glass-card placeholder">
-      <strong>Coming Soon</strong><br><br>
-      Futuristic vehicles for land, air and space travel
-      will be revealed here.
+  <!-- 6. WEAPONS -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Weapons</h2>
+      <p>Arsenal & technology</p>
     </div>
-
-    <div class="cards"></div>
+    <div class="card-row">
+      <div class="card placeholder">Coming Soon</div>
+      <div class="card placeholder">Coming Soon</div>
+      <div class="card placeholder">Coming Soon</div>
+    </div>
   </div>
 
-  <!-- CONCEPTS -->
-  <div class="section" data-section="concepts">
-    <h2>Concepts & Technology</h2>
-
-    <div class="glass-card placeholder">
-      <strong>Coming Soon</strong><br><br>
-      Experimental concepts, futuristic technology and
-      behind-the-scenes ideas will be shared here.
+  <!-- 7. VEHICLES -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Vehicles</h2>
+      <p>Ground, air & space</p>
     </div>
-
-    <div class="cards"></div>
+    <div class="card-row">
+      <div class="card placeholder">Coming Soon</div>
+      <div class="card placeholder">Coming Soon</div>
+    </div>
   </div>
 
-  <!-- COMMUNITY -->
-  <div class="section" data-section="community">
-    <h2>Community</h2>
-
-    <div class="glass-card placeholder">
-      <strong>Coming Soon</strong><br><br>
-      Community features, discussions and collaborations
-      will be available here.
+  <!-- 8. CONCEPTS -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Concepts</h2>
+      <p>Early ideas & designs</p>
     </div>
+    <div class="card-row">
+      <div class="card placeholder">Coming Soon</div>
+      <div class="card placeholder">Coming Soon</div>
+    </div>
+  </div>
 
-    <div class="cards"></div>
+  <!-- 9. UPDATES -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Updates</h2>
+      <p>Development progress</p>
+    </div>
+    <div class="card-row">
+      <div class="card placeholder">Coming Soon</div>
+      <div class="card placeholder">Coming Soon</div>
+    </div>
+  </div>
+
+  <!-- 10. COMMUNITY -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Community</h2>
+      <p>Creators & players</p>
+    </div>
+    <div class="card-row">
+      <div class="card placeholder" onclick="joinCommunity()">Join Community</div>
+      <div class="card placeholder">Coming Soon</div>
+    </div>
   </div>
 
 </div>
+
 <script>
 /* =====================================================
-   BASIC PAGE NAVIGATION
-   ===================================================== */
+   SECTION ACTIONS
+===================================================== */
 
-function go(page){
-  window.location.href = page;
+function joinCommunity(){
+  window.location.href = "community.html";
 }
-
-/* =====================================================
-   SLIDER TOGGLE (OPEN / CLOSE)
-   ===================================================== */
-
-function toggleSlider(){
-  const slider = document.getElementById("slider");
-  const body = document.body;
-
-  if(slider.classList.contains("active")){
-    slider.classList.remove("active");
-    body.classList.remove("lock");
-  }else{
-    slider.classList.add("active");
-    body.classList.add("lock");
-  }
-}
-
-/* Close slider when any link is clicked */
-document.querySelectorAll(".slider a").forEach(link=>{
-  link.addEventListener("click", ()=>{
-    document.getElementById("slider").classList.remove("active");
-    document.body.classList.remove("lock");
-  });
-});
-
-/* =====================================================
-   E-CREDITS (STATIC NOW, DYNAMIC LATER)
-   ===================================================== */
-
-/*
-  Abhi static value hai.
-  Future me:
-  - Supabase se fetch hoga
-  - Admin panel se update hoga
-*/
-
-function setCredits(value){
-  const el = document.getElementById("credits");
-  if(el){
-    el.innerText = "⚡ " + value;
-  }
-}
-
-/* Default value */
-setCredits(120);
-
-/* =====================================================
-   SECTION CONTENT MANAGEMENT (ADMIN READY)
-   ===================================================== */
-
-/*
-  Jab admin koi trailer / file upload karega:
-  - "Coming Soon" glass card remove hoga
-  - Real cards add honge
-*/
-
-function addCardToSection(sectionName, cardHTML){
-  const section = document.querySelector(
-    `.section[data-section="${sectionName}"]`
-  );
-
-  if(!section) return;
-
-  /* Remove placeholder if exists */
-  const placeholder = section.querySelector(".placeholder");
-  if(placeholder){
-    placeholder.remove();
-  }
-
-  /* Add card to cards container */
-  const cardsContainer = section.querySelector(".cards");
-  if(cardsContainer){
-    const wrapper = document.createElement("div");
-    wrapper.innerHTML = cardHTML;
-    cardsContainer.appendChild(wrapper.firstElementChild);
-  }
-}
-
-/* =====================================================
-   EXAMPLE (FOR FUTURE ADMIN USE)
-   ===================================================== */
-
-/*
-addCardToSection("trailers", `
-  <div class="card">
-    <img src="thumbnail.jpg" alt="Trailer thumbnail">
-    <strong>First Contact</strong>
-    <p>Official cinematic reveal</p>
-  </div>
-`);
-*/
-
 </script>
 
-  <script src="auth.js"></script>
+<!-- =====================================================
+   PART 4 START YAHAN SE AAYEGA
+   (ABOUT + FOOTER)
+===================================================== -->
+<!-- =====================================================
+   PART 4 : ABOUT + FOOTER
+===================================================== -->
+
+<style>
+/* ================= ABOUT SECTION ================= */
+.about{
+  max-width:1100px;
+  margin:100px auto 0;
+  padding:0 18px;
+  text-align:center;
+}
+
+.about h2{
+  font-size:28px;
+  font-weight:800;
+  margin-bottom:14px;
+}
+
+.about p{
+  font-size:15px;
+  opacity:.8;
+  line-height:1.7;
+  max-width:820px;
+  margin:0 auto 18px;
+}
+
+/* ================= FOOTER ================= */
+.footer{
+  margin-top:90px;
+  padding:60px 20px 30px;
+  background:rgba(255,255,255,.05);
+  border-top:1px solid rgba(255,255,255,.15);
+}
+
+.footer-inner{
+  max-width:1280px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:34px;
+}
+
+.footer h3{
+  font-size:15px;
+  font-weight:700;
+  margin-bottom:14px;
+}
+
+.footer a{
+  display:block;
+  font-size:14px;
+  opacity:.75;
+  margin-bottom:8px;
+  cursor:pointer;
+}
+
+.footer a:hover{
+  opacity:1;
+}
+
+.footer p{
+  font-size:14px;
+  opacity:.7;
+  line-height:1.6;
+}
+
+.footer-bottom{
+  margin-top:34px;
+  text-align:center;
+  font-size:13px;
+  opacity:.6;
+}
+</style>
+
+<!-- ================= ABOUT ================= -->
+<section class="about">
+  <h2>ABOUT E-LOONSO</h2>
+  <p>
+    E-LoonSo is building a next-generation sci-fi ecosystem where
+    games, stories, technology and community evolve together.
+  </p>
+  <p>
+    This is not just entertainment — it’s a universe shaped by
+    creators, players, and dreamers who believe the future can
+    be immersive, meaningful, and limitless.
+  </p>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+
+  <div class="footer-inner">
+
+    <div>
+      <h3>E-LoonSo</h3>
+      <p>
+        The future of immersive sci-fi ecosystems.<br>
+        Built with passion, vision, and community.
+      </p>
+    </div>
+
+    <div>
+      <h3>Explore</h3>
+      <a onclick="goTo('trailers.html')">Trailers</a>
+      <a onclick="goTo('games.html')">Games</a>
+      <a onclick="goTo('universe.html')">Universe</a>
+      <a onclick="goTo('community.html')">Community</a>
+    </div>
+
+    <div>
+      <h3>Support</h3>
+      <a onclick="goTo('support.html')">Support Us</a>
+      <a onclick="goTo('ideas.html')">Give Ideas</a>
+      <a onclick="goTo('feedback.html')">Feedback</a>
+    </div>
+
+    <div>
+      <h3>Company</h3>
+      <a onclick="goTo('about.html')">About Us</a>
+      <a onclick="goTo('privacy.html')">Privacy Policy</a>
+      <a onclick="goTo('terms.html')">Terms & Conditions</a>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    © 2025 E-LoonSo. All rights reserved.
+  </div>
+
+</footer>
+
+<script>
+/* =====================================================
+   FOOTER NAV
+===================================================== */
+function goTo(page){
+  window.location.href = page;
+}
+</script>
+
+<!-- ================= END ================= -->
+<body>
+<html>
