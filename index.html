@@ -11,6 +11,8 @@
 
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00ffd5">
 
 <style>
 /* ================= GLOBAL ================= */
@@ -124,38 +126,41 @@ button{border:none;background:none;cursor:pointer;color:inherit}
 }
 
 /* ================= SIDE MENU ================= */
-.side-menu{
+.menu-slider{
   position:fixed;
   top:0;
   left:-320px;
   width:300px;
   height:100vh;
-  background:rgba(10,12,16,.95);
+  z-index:999;
+
+  background:rgba(10,12,16,.85);
   backdrop-filter:blur(22px);
   border-right:1px solid rgba(255,255,255,.18);
-  padding:24px 18px;
+
+  padding:26px 18px;
   transition:.35s ease;
-  z-index:999;
 }
 
-.side-menu.active{
+.menu-slider.active{
   left:0;
 }
 
-.side-menu h3{
+.menu-slider h3{
+  margin-bottom:14px;
   font-size:16px;
-  margin:16px 0 10px;
 }
 
-.side-menu a{
+.menu-slider a{
   display:block;
   padding:10px 12px;
   border-radius:12px;
+  margin-bottom:6px;
   font-size:14px;
   opacity:.85;
 }
 
-.side-menu a:hover{
+.menu-slider a:hover{
   background:rgba(255,255,255,.1);
   opacity:1;
 }
@@ -170,7 +175,7 @@ button{border:none;background:none;cursor:pointer;color:inherit}
   <div class="top-left">
     <div class="menu-btn" onclick="toggleMenu()">☰</div>
     <img src="logo.png" alt="E-LoonSo">
-    <div class="brand">E-LoonSo</div>
+    <div class="brand"></div>
   </div>
 
   <div class="top-right">
@@ -181,19 +186,19 @@ button{border:none;background:none;cursor:pointer;color:inherit}
 </div>
 
 <!-- ================= SIDE MENU ================= -->
-<div class="side-menu" id="sideMenu">
+<div class="menu-slider" id="menuSlider">
   <h3>Universe</h3>
   <a>Trailers</a>
-  <a>World & Lore</a>
-  <a>Characters</a>
+  <a>Story</a>
   <a>Aliens</a>
+  <a>Characters</a>
   <a>Weapons</a>
   <a>Vehicles</a>
 
-  <h3>More</h3>
+  <h3 style="margin-top:18px">More</h3>
   <a>Community</a>
-  <a>Support Us</a>
-  <a>Give Ideas</a>
+  <a>Support the Mission</a>
+  <a>Downloads</a>
   <a>About Us</a>
 </div>
 
