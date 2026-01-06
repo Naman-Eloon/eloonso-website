@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>E-LoonSo</title>
 
-<!-- Google font (clean, Apple-like) -->
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Font -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
@@ -14,7 +17,7 @@
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont;
+  font-family:'Inter', system-ui, -apple-system;
 }
 
 body{
@@ -28,7 +31,7 @@ body{
   top:0;
   z-index:1000;
   background:rgba(255,255,255,0.85);
-  backdrop-filter: blur(20px);
+  backdrop-filter:blur(20px);
   border-bottom:1px solid rgba(0,0,0,0.08);
 }
 
@@ -55,12 +58,6 @@ body{
   height:28px;
 }
 
-.logo span{
-  font-weight:600;
-  font-size:18px;
-  letter-spacing:0.3px;
-}
-
 /* RIGHT CONTROLS */
 .nav-actions{
   display:flex;
@@ -68,7 +65,7 @@ body{
   gap:14px;
 }
 
-/* Sign in button */
+/* Sign in */
 .signin-btn{
   padding:7px 14px;
   border-radius:999px;
@@ -78,7 +75,7 @@ body{
   cursor:pointer;
 }
 
-/* Profile image (hidden before login) */
+/* Profile image */
 .profile-img{
   width:32px;
   height:32px;
@@ -88,7 +85,7 @@ body{
   cursor:pointer;
 }
 
-/* Menu button (RIGHT SIDE as you said) */
+/* Menu button */
 .menu-btn{
   width:34px;
   height:34px;
@@ -119,7 +116,7 @@ body{
 .menu-btn span::before{ top:-6px; }
 .menu-btn span::after{ top:6px; }
 
-/* ========== COLORFUL STRIP (navbar ke niche) ========== */
+/* ========== COLOR STRIP ========== */
 .color-strip{
   height:5px;
   background:linear-gradient(
@@ -132,7 +129,7 @@ body{
   );
 }
 
-/* ========== SLIDE MENU (MOBILE + DESKTOP) ========== */
+/* ========== SIDE MENU ========== */
 .side-menu{
   position:fixed;
   top:0;
@@ -166,12 +163,6 @@ body{
 .menu-list li{
   cursor:pointer;
 }
-
-/* ========== RESPONSIVE ========== */
-@media(min-width:900px){
-  /* desktop par menu fullscreen nahi,
-     baad me PART 2/3 me refine karenge */
-}
 </style>
 </head>
 
@@ -182,29 +173,20 @@ body{
   <div class="nav-inner">
 
     <!-- LEFT -->
-    <div class="logo">
-      <!-- apna logo.png yaha -->
+    <div class="logo" onclick="goHome()">
       <img src="logo.png" alt="E-LoonSo">
-      <span>E-LoonSo</span>
     </div>
 
     <!-- RIGHT -->
     <div class="nav-actions">
-      <!-- Sign in (login se pehle) -->
       <button class="signin-btn" id="signinBtn" onclick="goLogin()">Sign in</button>
-
-      <!-- Profile image (login ke baad) -->
-      <img src="profile.jpg" class="profile-img" id="profileImg">
-
-      <!-- Menu button (RIGHT SIDE) -->
+      <img src="avatar.png" class="profile-img" id="profileImg">
       <div class="menu-btn" onclick="toggleMenu()">
         <span></span>
       </div>
     </div>
 
   </div>
-
-  <!-- Colorful strip -->
   <div class="color-strip"></div>
 </header>
 
@@ -213,37 +195,68 @@ body{
   <div class="close" onclick="toggleMenu()">✕</div>
 
   <ul class="menu-list">
-    <li>Universe</li>
-    <li>Trailers</li>
-    <li>Story</li>
-    <li>Aliens</li>
-    <li>Weapons</li>
-    <li>Community</li>
-    <li>Support Us</li>
-    <li>Settings</li>
+    <li onclick="goPage('index.html')">Home</li>
+    <li onclick="goPage('trailers.html')">Trailers</li>
+    <li onclick="goPage('weapons.html')">Weapons</li>
+    <li onclick="goPage('aliens.html')">Aliens</li>
+    <li onclick="goPage('community.html')">Community</li>
+    <li onclick="goPage('support.html')">Support Us</li>
+    <li onclick="logout()">Log out</li>
   </ul>
 </div>
 
 <script>
-/* ===== MENU ===== */
+/* ========== SUPABASE INIT ========== */
+const supabaseClient = supabase.createClient(
+  "https://xuippgenqrbebcvjobmp.supabase.co",
+  "YOUR_ANON_KEY"
+);
+
+/* ========== AUTH CHECK ========== */
+async function checkAuth(){
+  const { data:{ user } } = await supabaseClient.auth.getUser();
+
+  if(user){
+    // logged in
+    document.getElementById("signinBtn").style.display="none";
+    document.getElementById("profileImg").style.display="block";
+
+    document.getElementById("profileImg").src =
+      user.user_metadata?.avatar_url || "avatar.png";
+  }else{
+    // not logged in
+    document.getElementById("signinBtn").style.display="block";
+    document.getElementById("profileImg").style.display="none";
+  }
+}
+
+checkAuth();
+
+/* ========== MENU ========== */
 function toggleMenu(){
   document.getElementById("sideMenu").classList.toggle("open");
 }
 
-/* ===== LOGIN FLOW (NO FORCE LOGIN) ===== */
+/* ========== NAVIGATION ========== */
 function goLogin(){
-  window.location.href = "login.html";
+  window.location.href="login.html";
 }
 
-/* ===== DEMO: login ke baad kya hoga =====
-   (baad me Supabase se connect hoga) */
-function mockLogin(){
-  document.getElementById("signinBtn").style.display="none";
-  document.getElementById("profileImg").style.display="block";
+function goHome(){
+  window.location.href="index.html";
+}
+
+function goPage(page){
+  window.location.href = page;
+}
+
+/* ========== LOGOUT ========== */
+async function logout(){
+  await supabaseClient.auth.signOut();
+  window.location.reload();
 }
 </script>
 
-<!-- ===== HERO SECTION ===== -->
 <section class="hero">
 
   <!-- soft apple-style gradient background -->
